@@ -3,7 +3,7 @@ Clear, concise explanation and optimal solutions to every single challenge on th
 
 
 ## Arrays & Hashing
-### 1. Contains Duplicate 
+### [217. Contains Duplicate](https://leetcode.com/problems/contains-duplicate/) <sup style="color:#2DB55D">Easy</sup>
 Given an integer array `nums`, return `true` if any value appears **at least twice** in the array, and return `false` if every element is distinct.
 
 ##### Solution: 
@@ -22,7 +22,7 @@ def containsDuplicate(self, nums: List[int]) -> bool:
 - If `n` is found in the `hashset`, that means it's a duplicate element, so the function returns `True`, indicating that the input array contains duplicates.
 ___
 
-### 2. Valid Anagram
+### [242. Valid Anagram](https://leetcode.com/problems/valid-anagram/) <sup style="color:#2DB55D">Easy</sup>
 
 Given two strings `s` and `t`, return `true` if `t` is an anagram of `s`, and `false` otherwise.
 
@@ -47,7 +47,7 @@ def isAnagram(self, s: str, t: str) -> bool:
 - It iterates through both strings simultaneously using a `for` loop.
 ___
 
-### 3. Two Sum
+### [1. Two Sum](https://leetcode.com/problems/two-sum/) <sup style="color:#2DB55D">Easy</sup>
 Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`.
 
 You may assume that each input would have exactly one solution, and you may not use the same element twice.
@@ -68,7 +68,7 @@ def twoSum(self, nums: List[int], target: int) -> List[int]:
 -  If the `diff` is not found in `prevMap`, it adds the current element `val` to `prevMap` with its index `i`
 ___
 
-### 4. Group Anagrams
+### [49. Group Anagrams](https://leetcode.com/problems/group-anagrams/) <sup style="color:#FFB801">Medium</sup>
 Given an array of strings strs, group the anagrams together. You can return the answer in any order.
 
 An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
@@ -90,7 +90,7 @@ def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
 - Time complexity `O(n*k)`; `n` is length of `strs` and `k` is length of largest string.
 ___
 
-### 5. Top K Frequent Elements
+### [347. Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/) <sup style="color:#FFB801">Medium</sup>
 Given an integer array `nums` and an integer `k`, return the `k` most frequent elements. You may return the answer in any order.
 
 ##### Solution: 
@@ -122,7 +122,7 @@ def topKFrequent(self, nums: List[int], k: int) -> List[int]:
 - So we traverse freq array from the last to get top `k` frequent elements.
 ___
 
-### 6. Product of Array Except Self
+### [238. Product of Array Except Self](https://leetcode.com/problems/product-of-array-except-self/) <sup style="color:#FFB801">Medium</sup>
 Given an integer array `nums`, return an array answer such that `answer[i]` is equal to the product of all the elements of `nums` except `nums[i]`.
 
 The product of any prefix or suffix of `nums` is **guaranteed** to fit in a **32-bit** integer.
@@ -152,7 +152,7 @@ def productExceptSelf(self, nums: List[int]) -> List[int]:
 ```
 ___
 
-### 7. Encode and Decode Strings
+### [271. Encode and Decode Strings](https://leetcode.com/problems/encode-and-decode-strings/) <sup style="color:#FFB801">Medium</sup>
 
 Design an algorithm to encode a list of strings to a string. The encoded string is then sent over the network and is decoded back to the original list of strings.
 
@@ -179,7 +179,7 @@ class Solution:
 ```
 ___
 
-### 8. Longest Consecutive Sequence
+### [128. Longest Consecutive Sequence](https://leetcode.com/problems/longest-consecutive-sequence/) <sup style="color:#FFB801">Medium</sup>
 
 Given an unsorted array of integers `nums`, return the length of the *longest consecutive elements sequence*.
 
@@ -213,7 +213,7 @@ ___
 
 ## Two Pointers
 
-### 9.
+### [125. Valid Palindrome](https://leetcode.com/problems/valid-palindrome/) <sup style="color:#2DB55D">Easy</sup>
 
 A phrase is a **palindrome** if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.
 
@@ -249,7 +249,7 @@ def alphanum(self, c):
 
 ---
 
-### 10. 3Sum
+### [15. 3Sum](https://leetcode.com/problems/3sum/) <sup style="color:#FFB801">Medium</sup>
 
 Given an integer array nums, return all the triplets `[nums[i], nums[j], nums[k]]` such that `i != j`, `i != k`, and `j != k`, and `nums[i] + nums[j] + nums[k] == 0`.
 
@@ -264,6 +264,7 @@ Notice that the solution set must not contain duplicate triplets.
     - If `threeSum` is +ve, means, we need more -ve numbers to make it 0, decreament high (right--).
     - If `threeSum` is 0, that means we have found the required triplet, push it in result array.
 - Now again, to avoid duplicate triplets, we have to navigate to last occurences of `num[left]` and `num[right]` respectively.
+
 ```python
 def threeSum(self, nums: List[int]) -> List[List[int]]:
     res = []
@@ -279,6 +280,7 @@ def threeSum(self, nums: List[int]) -> List[List[int]]:
         if x > 0:
             break
 
+        # If number is getting repeated, ignore the lower loop and continue.
         if i > 0 and x == nums[i - 1]:
             continue
 
@@ -306,7 +308,7 @@ def threeSum(self, nums: List[int]) -> List[List[int]]:
 
 ---
 
-### 11. Container With Most Water
+### [11. Container With Most Water](https://leetcode.com/problems/container-with-most-water/) <sup style="color:#FFB801">Medium</sup>
 
 
 You are given an integer array `height` of length `n`. There are `n` vertical lines drawn such that the two endpoints of the `i`<sup>th</sup> line are `(i, 0)` and `(i, height[i])`.
@@ -347,6 +349,42 @@ def maxArea(self, height: List[int]) -> int:
 ---
 
 ## Sliding Window
+
+### [121. Best Time to Buy and Sell Stock](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/) <sup style="color:#2DB55D">Easy</sup>
+
+You are given an array `prices` where `prices[i]` is the price of a given stock on the `i`<sup>th</sup> day.
+
+You want to maximize your profit by choosing a **single** day to buy one stock and choosing a **different day in the future** to sell that stock.
+
+Return the *maximum profit you can achieve from this transaction*. If you cannot achieve any profit, return `0`.
+
+Example: \
+Input: prices = [7,1,5,3,6,4] \
+Output: 5 \
+Explanation: Buy on day 2 (price = 1) and sell on day 5 (price = 6)
+
+#### Solution:
+- We use sliding window approach with two pointer, `left` for buying and `right` for selling.
+- We fixate the buying day (`left`) and iterate over prices to find a selling day (`right`).
+- If we come across a selling day (`right`) that has price lower than buying day (`left`), we update our buying day (`left`) to this index in the array `prices`. As we need to buy at lowest possible price, for maximizing the profit.
+- In each iteration we also check if the profit is bigger than earlier profit by taking `max`.
+```python
+def maxProfit(self, prices):
+    left = 0
+    max_profit = 0
+
+    for right in range(1, len(prices)):
+        # This means loss, we found a price lower than earlier buying price
+        # so we set this as our buying price, ie we update left to this location
+        if prices[right] < prices[left]: 
+            left = right
+    
+        currentProfit = prices[right] - prices[left] #our current Profit
+        max_profit = max(currentProfit,max_profit)
+
+    return max_profit
+```
+- Time complexity, `O(n)`
 
 ## Stack
 
