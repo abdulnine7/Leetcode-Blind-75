@@ -3,10 +3,10 @@ Clear, concise explanation and optimal solutions to every single challenge on th
 
 
 ## Arrays & Hashing
-#### 1. Contains Duplicate 
+### 1. Contains Duplicate 
 Given an integer array `nums`, return `true` if any value appears **at least twice** in the array, and return `false` if every element is distinct.
 
-###### Solution: 
+##### Solution: 
 - Using `hashset` to keep track of unique elements.
 ```python
 def containsDuplicate(self, nums: List[int]) -> bool:
@@ -22,13 +22,13 @@ def containsDuplicate(self, nums: List[int]) -> bool:
 - If `n` is found in the `hashset`, that means it's a duplicate element, so the function returns `True`, indicating that the input array contains duplicates.
 ___
 
-#### 2. Valid Anagram
+### 2. Valid Anagram
 
 Given two strings `s` and `t`, return `true` if `t` is an anagram of `s`, and `false` otherwise.
 
 An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
 
-###### Solution: 
+##### Solution: 
 - Using two dictionaries with count of each characters.
 ```python
 def isAnagram(self, s: str, t: str) -> bool:
@@ -47,12 +47,12 @@ def isAnagram(self, s: str, t: str) -> bool:
 - It iterates through both strings simultaneously using a `for` loop.
 ___
 
-#### 3. Two Sum
+### 3. Two Sum
 Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`.
 
 You may assume that each input would have exactly one solution, and you may not use the same element twice.
 
-###### Solution: 
+##### Solution: 
 - Using dictionary called `prevMap` to store previously encountered values. 
 ```python
 def twoSum(self, nums: List[int], target: int) -> List[int]:
@@ -68,12 +68,12 @@ def twoSum(self, nums: List[int], target: int) -> List[int]:
 -  If the `diff` is not found in `prevMap`, it adds the current element `val` to `prevMap` with its index `i`
 ___
 
-#### 4. Group Anagrams
+### 4. Group Anagrams
 Given an array of strings strs, group the anagrams together. You can return the answer in any order.
 
 An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
 
-###### Solution: 
+##### Solution: 
 - Using a dictionary `ans` to store all the strings with the `key` as tuple of frequency count of characters of the string.
 ```python
 def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
@@ -90,10 +90,10 @@ def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
 - Time complexity `O(n*k)`; `n` is length of `strs` and `k` is length of largest string.
 ___
 
-#### 5. Top K Frequent Elements
+### 5. Top K Frequent Elements
 Given an integer array `nums` and an integer `k`, return the `k` most frequent elements. You may return the answer in any order.
 
-###### Solution: 
+##### Solution: 
 
 - This can easily done by counting the frequency in a dictionary `d` and then adding the elements to a max heap of size `k`. Time complexity will be, `O(n) + O(d*log(k))`.
 - Here we will use different approach for the solution to solve it in `O(n)` time.
@@ -122,16 +122,16 @@ def topKFrequent(self, nums: List[int], k: int) -> List[int]:
 - So we traverse freq array from the last to get top `k` frequent elements.
 ___
 
-#### 6. Product of Array Except Self
+### 6. Product of Array Except Self
 Given an integer array `nums`, return an array answer such that `answer[i]` is equal to the product of all the elements of `nums` except `nums[i]`.
 
 The product of any prefix or suffix of `nums` is **guaranteed** to fit in a **32-bit** integer.
 
 You must write an algorithm that runs in `O(n)` time and without using the division operation.
 
-###### Solution: 
+##### Solution: 
 - First calculate the product of each element from `0` to `i-1` and store it at index `i` in the `res` array.
-- We traverse from the end and keep track of product from `n-1` to `i+1` while we update the `i`^th^ position in the `res` array.
+- We traverse from the end and keep track of product from `n-1` to `i+1` while we update the `i`<sup>th</sup> position in the `res` array.
 - Finally we have product of all the elements except self in the `res` array.
 ```python
 def productExceptSelf(self, nums: List[int]) -> List[int]:
@@ -152,7 +152,7 @@ def productExceptSelf(self, nums: List[int]) -> List[int]:
 ```
 ___
 
-#### 7. Encode and Decode Strings
+### 7. Encode and Decode Strings
 
 Design an algorithm to encode a list of strings to a string. The encoded string is then sent over the network and is decoded back to the original list of strings.
 
@@ -166,7 +166,7 @@ Explanation:
 One possible encode method is: "lint#code#love#you"
 ```
 
-###### Solution: 
+##### Solution: 
 - Very easy need no explaination. Bye.
 
 ```python
@@ -179,13 +179,13 @@ class Solution:
 ```
 ___
 
-#### 8. Longest Consecutive Sequence
+### 8. Longest Consecutive Sequence
 
 Given an unsorted array of integers `nums`, return the length of the *longest consecutive elements sequence*.
 
 You must write an algorithm that runs in `O(n)` time.
 
-###### Solution: 
+##### Solution: 
 - In this we have to count the length of longest consecutive sequence. in `O(n)` time.
 - This can be easily done by sorting the array and counting but it will take `O(nlogn)` time.
 - In this solution, we convert the `nums` in `hashset` and try to find the start of any sequence.
@@ -212,6 +212,139 @@ def longestConsecutive(self, nums: List[int]) -> int:
 ___
 
 ## Two Pointers
+
+### 9.
+
+A phrase is a **palindrome** if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.
+
+Given a string `s`, return `true` if it is a **palindrome**, or `false` otherwise.
+
+#### Solution:
+- In this we visit the string form both side and check if characters are same.
+- Here we ignore character `c` that are not alphabet or numeric. Using function `alphanum(c)`.
+
+```python
+def isPalindrome(self, s: str) -> bool:
+    l, r = 0, len(s) - 1
+    while l < r:
+        while l < r and not self.alphanum(s[l]):
+            l += 1
+        while l < r and not self.alphanum(s[r]):
+            r -= 1
+        if s[l].lower() != s[r].lower():
+            return False
+        l += 1
+        r -= 1
+    return True
+
+# Could write own alpha-numeric function
+def alphanum(self, c):
+    return (
+        ord("A") <= ord(c) <= ord("Z")
+        or ord("a") <= ord(c) <= ord("z")
+        or ord("0") <= ord(c) <= ord("9")
+    )
+```
+- Time complexity, `O(n)`
+
+---
+
+### 10. 3Sum
+
+Given an integer array nums, return all the triplets `[nums[i], nums[j], nums[k]]` such that `i != j`, `i != k`, and `j != k`, and `nums[i] + nums[j] + nums[k] == 0`.
+
+Notice that the solution set must not contain duplicate triplets.
+
+#### Solution:
+- As array has both `-ve` and `+ve` numbers, firstly we sort the array. 
+- If array size <3 means no triplets. If sorted array 1<sup>st</sup> element is +ve means no sum of 3 numbers = 0.
+- The basic thinking logic for this is: **Fix any one number in sorted array and find the other two numbers after it**. The other two numbers can be easily found using two pointers (as array is sorted) and two numbers should have sum = -1*(fixed number).
+- Search between two pointers, just similiar to binary search. `threeSum = num[i] + num[left] + num[right]`.
+    - If `threeSum` is -ve, means, we need more +ve numbers to make it 0, increament low (left++).
+    - If `threeSum` is +ve, means, we need more -ve numbers to make it 0, decreament high (right--).
+    - If `threeSum` is 0, that means we have found the required triplet, push it in result array.
+- Now again, to avoid duplicate triplets, we have to navigate to last occurences of `num[left]` and `num[right]` respectively.
+```python
+def threeSum(self, nums: List[int]) -> List[List[int]]:
+    res = []
+    nums.sort()
+
+    if len(nums) < 3:  # Base case 1
+        return []
+    if nums[0] > 0:  # Base case 2
+        return []
+
+    for i, x in enumerate(nums): # Traversing the array to fix the number.
+        # If the fix number is +ve, stop, we can't make it zero by searching after it.
+        if x > 0:
+            break
+
+        if i > 0 and x == nums[i - 1]:
+            continue
+
+        l, r = i + 1, len(nums) - 1 # Make two pointers, left and right
+        while l < r:    # Search between two pointers, similar to binary search.
+            threeSum = x + nums[l] + nums[r]
+            if threeSum > 0:
+                r -= 1
+            elif threeSum < 0:
+                l += 1
+            else:
+                res.append([x, nums[l], nums[r]])
+                l += 1
+                r -= 1
+
+                # Navigate to the last occurrences of nums[l] and nums[r] to avoid duplicates
+                while nums[l] == nums[l - 1] and l < r:
+                    l += 1
+                while nums[r] == nums[r + 1] and l < r:
+                    r -= 1
+                    
+    return res
+```
+- Time complexity O(n<sup>2</sup>)
+
+---
+
+### 11. Container With Most Water
+
+
+You are given an integer array `height` of length `n`. There are `n` vertical lines drawn such that the two endpoints of the `i`<sup>th</sup> line are `(i, 0)` and `(i, height[i])`.
+
+Find two lines that together with the x-axis form a container, such that the container contains the most water.
+
+Return the *maximum amount* of water a container can store.
+
+**Notice** that you may not slant the container.
+
+<img src="https://s3-lc-upload.s3.amazonaws.com/uploads/2018/07/17/question_11.jpg"  width="500">
+
+#### Solution:
+- First we set left and right pointer at the extream ends. 
+- And we measure water level with minimum of two heights, `height[left]` and `height[right]` with width, `right-left`
+- In order to have more height of the container we move left or right pointer. Whichever is shorter in height we change that pointer to next.
+
+```python
+def maxArea(self, height: List[int]) -> int:
+    l, r = 0, len(height) - 1
+    water = 0
+
+    while l < r:
+        # Calculate the water between the current left and right pointers and take max
+        water = max(water, (r - l) * min(height[l], height[r]))
+
+        # Move the pointer that points to the shorter height towards the center,
+        # as moving the taller height wouldn't increase the water.
+        if height[l] < height[r]:
+            l += 1
+        elif height[r] <= height[l]:
+            r -= 1
+        
+    return water
+```
+- Time complexity, `O(n)`
+
+---
 
 ## Sliding Window
 
