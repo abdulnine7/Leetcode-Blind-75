@@ -6,7 +6,7 @@ Clear, concise explanation and optimal solutions to every single challenge on th
 ### [217. Contains Duplicate](https://leetcode.com/problems/contains-duplicate/) <sup style="color:#2DB55D">Easy</sup>
 Given an integer array `nums`, return `true` if any value appears **at least twice** in the array, and return `false` if every element is distinct.
 
-##### Solution: 
+####  Solution: 
 - Using `hashset` to keep track of unique elements.
 ```python
 def containsDuplicate(self, nums: List[int]) -> bool:
@@ -28,7 +28,7 @@ Given two strings `s` and `t`, return `true` if `t` is an anagram of `s`, and `f
 
 An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
 
-##### Solution: 
+####  Solution: 
 - Using two dictionaries with count of each characters.
 ```python
 def isAnagram(self, s: str, t: str) -> bool:
@@ -52,7 +52,7 @@ Given an array of integers `nums` and an integer `target`, return indices of the
 
 You may assume that each input would have exactly one solution, and you may not use the same element twice.
 
-##### Solution: 
+####  Solution: 
 - Using dictionary called `prevMap` to store previously encountered values. 
 ```python
 def twoSum(self, nums: List[int], target: int) -> List[int]:
@@ -73,7 +73,7 @@ Given an array of strings strs, group the anagrams together. You can return the 
 
 An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
 
-##### Solution: 
+####  Solution: 
 - Using a dictionary `ans` to store all the strings with the `key` as tuple of frequency count of characters of the string.
 ```python
 def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
@@ -93,7 +93,7 @@ ___
 ### [347. Top K Frequent Elements](https://leetcode.com/problems/top-k-frequent-elements/) <sup style="color:#FFB801">Medium</sup>
 Given an integer array `nums` and an integer `k`, return the `k` most frequent elements. You may return the answer in any order.
 
-##### Solution: 
+####  Solution: 
 
 - This can easily done by counting the frequency in a dictionary `d` and then adding the elements to a max heap of size `k`. Time complexity will be, `O(n) + O(d*log(k))`.
 - Here we will use different approach for the solution to solve it in `O(n)` time.
@@ -129,7 +129,7 @@ The product of any prefix or suffix of `nums` is **guaranteed** to fit in a **32
 
 You must write an algorithm that runs in `O(n)` time and without using the division operation.
 
-##### Solution: 
+####  Solution: 
 - First calculate the product of each element from `0` to `i-1` and store it at index `i` in the `res` array.
 - We traverse from the end and keep track of product from `n-1` to `i+1` while we update the `i`<sup>th</sup> position in the `res` array.
 - Finally we have product of all the elements except self in the `res` array.
@@ -166,7 +166,7 @@ Explanation:
 One possible encode method is: "lint#code#love#you"
 ```
 
-##### Solution: 
+####  Solution: 
 - Very easy need no explaination. Bye.
 
 ```python
@@ -185,7 +185,7 @@ Given an unsorted array of integers `nums`, return the length of the *longest co
 
 You must write an algorithm that runs in `O(n)` time.
 
-##### Solution: 
+####  Solution: 
 - In this we have to count the length of longest consecutive sequence. in `O(n)` time.
 - This can be easily done by sorting the array and counting but it will take `O(nlogn)` time.
 - In this solution, we convert the `nums` in `hashset` and try to find the start of any sequence.
@@ -385,6 +385,147 @@ def maxProfit(self, prices):
     return max_profit
 ```
 - Time complexity, `O(n)`
+---
+
+### [3. Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/) <sup style="color:#FFB801">Medium</sup>
+
+Given a string `s`, find the length of the **longest substring** without repeating characters.
+
+Example:\
+Input: s = "abcabcbb"\
+Output: 3\
+Explanation: The answer is "abc", with the length of 3.
+
+#### Solution:
+
+- In this again we use 2 pointers and a character set to have/record unique elements. 
+- While traversing the `right` pointer when we come across a element that is already in set, we pop elements of set `charSet` and move `left` pointer untill the element is popped out. And our window left to right contain all unique elements.
+- At each iteration we check and record if length `left` to `right` is **maximum**.
+```python
+def lengthOfLongestSubstring(self, s: str) -> int:
+    charSet = set()
+    left = 0
+    result = 0
+
+    for right in range(len(s)):
+
+        while s[right] in charSet:
+            charSet.remove(s[left])
+            left += 1
+
+        charSet.add(s[right])
+        result = max(result, right - left + 1)
+    return result
+```
+- Time, `O(n)`
+---
+### [424. Longest Repeating Character Replacement](https://leetcode.com/problems/longest-repeating-character-replacement/) <sup style="color:#FFB801">Medium</sup>
+
+You are given a string `s` and an integer `k`. You can choose any character of the string and change it to any other uppercase English character. You can perform this operation at most `k` times.
+
+Return the length of the *longest substring containing the same letter* you can get after performing the above operations.
+
+Example: \
+Input: s = "ABAB", k = 2 \
+Output: 4 \
+Explanation: Replace the two 'A's with two 'B's or vice versa.
+
+
+##### Solution:
+
+- In this again we use 2 pointers and a *frequency dictionary* (`count`) to keep count of characters in current window.
+- We track the window with `left` and `right` pointers, and we also keep record `maxf` ie *maximum frequency of any character in the current window*.
+- In each iteration the size of window is increased as `right` is increased, But if voilation happend in that iteration `left` is increased so size is reduced by 1 and window size remain same.
+- In this we wont update the `maxf` when we reduce the window size, as we are not tracking `maxf` belong to which character's frequency.
+- Hence by the end we will have window of maximum length that can be made by ignoring `k` characters.
+```python
+def characterReplacement(self, s: str, k: int) -> int:
+    count = {}
+    left = 0
+    maxf = 0
+
+    for right in range(len(s)):
+        
+        # Update count of character in frequency counter in current window
+        count[s[right]] = 1 + count.get(s[right], 0)
+        maxf = max(maxf, count[s[right]])
+
+        # If voilation detected, ie. the length of the current window minus the maximum 
+        # frequency exceeds 'k', it means we need to shrink the window from the left
+        if (right - left + 1) - maxf > k:
+            count[s[left]] -= 1 
+            left += 1
+
+    return (right - left + 1)
+```
+- Time complexity, `O(n)`
+---
+### [76. Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/) <sup style="color:#FF2D55">Hard</sup>
+
+Given two strings `s` and `t` of lengths `m` and `n` respectively, return the **minimum window
+substring** of `s` such that every character in `t` (**including duplicates**) is included in the window. If there is no such substring, `return` the empty string `""`.
+
+The testcases will be generated such that the answer is **unique**.
+
+##### Solution:
+
+- In this we maintain 2 dictionaries, 2 variables `have` and `need`
+    - `countT` to keep frequency count of chatacters of `t`
+    - `window` to keep frequenc count of characters of current window
+    - `have` is count of characters that is there in window that are in `t`
+    - `need` need is required number of characters we need in the window that are in `t`
+- We also maintain `res` for result string (start, end) and `resLen` for length of result string
+- Rest of the explaination in comments:
+
+```python
+def minWindow(self, s: str, t: str) -> str:
+    if t == "":
+        return ""
+
+    countT, window = {}, {}
+
+    # We get frequency count of t in countT
+    for c in t:
+        countT[c] = 1 + countT.get(c, 0)
+
+    # Iniitialize variables needed
+    have, need = 0, len(countT)
+    res, resLen = [-1, -1], float("infinity")
+    left = 0
+
+    # Iterate  the right pointer 
+    for right in range(len(s)):
+        # Add character count to window as they reveal
+        c = s[right]
+        window[c] = 1 + window.get(c, 0)
+
+        # if a character that is in t matches count in both dictionary
+        # that means we have that character, hence we update have 
+        if c in countT and window[c] == countT[c]:
+            have += 1
+
+        # 1. When we have all the characters we need we update result
+        # 2. we have while loop here instead of IF because to collect all the characters
+        #    and make have==need we collected more more characters in window than needed
+        #    in minimum so we pop characters on left and update results while, have==need
+        while have == need:
+            if (right - left + 1) < resLen:
+                res = [left, right]
+                resLen = right - left + 1
+        
+            # pop from the left of our window and update have if we pop a character from
+            # the window that is also in t. Also update left in each pop.
+            window[s[left]] -= 1
+            if s[left] in countT and window[s[left]] < countT[s[left]]:
+                have -= 1
+            left += 1
+    
+    # Get he start and end from res and return the substring
+    left, right = res
+    return s[left : right + 1] if resLen != float("infinity") else ""
+```
+- Time complexity, `O(m+n)`, here `m` and `n` are size of `s` and `t`.
+---
 
 ## Stack
 
@@ -415,3 +556,15 @@ def maxProfit(self, prices):
 ## Math & Geometry
 
 ## Bit Manipulation
+
+### []()
+
+##### Solution:
+
+-
+
+```python
+
+```
+-
+---
