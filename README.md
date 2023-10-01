@@ -529,7 +529,147 @@ def minWindow(self, s: str, t: str) -> str:
 
 ## Stack
 
+### [20. Valid Parentheses](https://leetcode.com/problems/valid-parentheses/)
+
+Given a string `s` containing just the characters `'('`,` ')'`, `'{'`, `'}'`, `'['` and `']'`, determine if the input string is valid.
+
+An input string is valid if:
+1. Open brackets must be closed by the same type of brackets.
+2. Open brackets must be closed in the correct order.
+3. Every close bracket has a corresponding open bracket of the same type.
+
+##### Solution:
+
+- Here we create a dictionary (`Map`) of parenthesis, we use *closing parenthesis as key* and its corresponding *opening parenthesis as value*. And a list `stack` to track opening parenthesis.
+- We then iterate string `s` and for each character `c`.
+- If we come come across a opening parenthesis we add it to the `stack`.
+- If we come across closing parenthesis we check stack top if we have its corresponding opening parenthesis, if not we return `False`.
+
+```python
+def isValid(self, s: str) -> bool:
+    Map = {")": "(", "]": "[", "}": "{"}
+    stack = []
+
+    for c in s:
+        # character c is opening parenthesis
+        if c not in Map:
+            stack.append(c)
+            continue
+
+        # character c is closing parenthesis, hence we check if at the
+        # top of stack we have its corresponding opening parenthesis
+        if not stack or stack[-1] != Map[c]:
+            return False
+
+        stack.pop()
+
+    return not stack
+```
+- Time complexity, `O(n)`
+---
+
 ## Binary Search
+
+Note: 
+- In Binary Search when we find the middle value between the left and right bounds (their average) we can equivalently do: `mid = left + (right - left) // 2`, if we are concerned left + right would cause overflow (which would occur **if we are searching a massive array using a language like Java or C** that has fixed size integer types).
+- In python we can simply do  `mid = (left + right ) // 2`
+
+### [153. Find Minimum in Rotated Sorted Array](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/)
+
+Suppose an array of length `n` sorted in ascending order is rotated between `1` and `n` times. For example, the array `nums = [0,1,2,4,5,6,7]` might become:
+
+- `[4,5,6,7,0,1,2]` if it was rotated `4` times.
+- `[0,1,2,4,5,6,7]` if it was rotated `7` times.
+
+Notice that rotating an array `[a[0], a[1], a[2], ..., a[n-1]]` 1 time results in the array `[a[n-1], a[0], a[1], a[2], ..., a[n-2]]`.
+
+Given the sorted rotated array `nums` of **unique elements**, return the *minimum element* of this array.
+
+You must write an algorithm that runs in `O(log n)` time.
+
+##### Solution:
+
+- There is a point `pivot` in which is the minimum of array.
+- In this solution the main idea for our checks is to converge the `start` and `end` bounds on the start of the `pivot/minimum`, and never disqualify the index for a possible minimum value.
+- `if nums[mid] > nums[end]` is True, 
+    - We KNOW that the `pivot/minimum` value must have occurred somewhere to the right of `mid`, which is why the values wrapped around and became smaller, hence we update, `start = mid + 1` 
+    - Eg. `array=[3,4,5,6,7,8,9,1,2]` where `array[mid]=7` and `array[end]=2`
+- else we have `if nums[mid] <= nums[end]`,
+    - We KNOW the `pivot/minimum` must be at `mid` or to the left of `mid`. we know the numbers continued increasing to the right of `mid`, so they never reached the pivot and wrapped around. Therefore, we know the pivot must be at `index <= mid`. Hence we update, `end = mid` .
+    - Eg. `array=[8,9,1,2,3,4,5,6,7]` where `array[mid]=3` and `array[end]=7`
+- At the end we will have `start = end` which will be our pivot index. 
+
+```python
+def findMin(self, nums: List[int]) -> int:
+    start, end = 0, len(nums) - 1
+    
+    while start  <  end :
+        mid = (start + end ) // 2
+
+        # right has the pivot 
+        if nums[mid] > nums[end]:
+            start = mid + 1
+            
+        # left has the pivot 
+        else:
+            end = mid 
+            
+    return nums[start]
+```
+- Time complexity, `O(log n)`
+---
+
+### [33. Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array/)
+
+There is an integer array `nums` sorted in ascending order (with **distinct** values).
+
+Prior to being passed to your function, `nums` is **possibly rotated** at an unknown pivot index `k` `(1 <= k < nums.length)` such that the resulting array is `[nums[k], nums[k+1], ..., nums[n-1], nums[0], nums[1], ..., nums[k-1]]` (**0-indexed**). For example, `[0,1,2,4,5,6,7]` might be rotated at pivot index `3` and become `[4,5,6,7,0,1,2]`.
+
+Given the array `nums` **after** the possible rotation and an integer `target`, return the *index of* `target` if it is in `nums`, or `-1` if it is not in `nums`.
+
+You must write an algorithm with **O(log n)** runtime complexity.
+
+##### Solution:
+
+- Just like every binary search we take the `mid` and check if it is the target. If not then we move further.
+- If we have `nums[start] <= nums[mid]` means left portion of array is sorted.
+    - Eg. array=[<u>3,4,5,6,7</u>,8,9,1,2] where `array[start]=3` and `array[mid]=7`
+    - So we now know ***if target is greater than mid element or if it is smaller than start element*** that means it should be on right side of mid element. Hence `start = mid + 1` .
+    - Otherwise, it should be on left side of mid element. Hence we do `end = mid - 1`
+- If we have `nums[start] > nums[mid]` means left portion of array is sorted.
+    - Eg. array=[8,9,1,2,<u>3,4,5,6,7</u>] where `array[start]=8` and `array[mid]=3`
+    - So we now know ***if target is less than mid element or if it is greater than end element*** that means it should be on left side of mid element. Hence `end = mid - 1` .
+    - Otherwise, it should be on right side of mid element. Hence we do `start = mid + 1`
+    
+
+```python
+def search(self, nums: List[int], target: int) -> int:
+    start, end = 0, len(nums) - 1
+
+    while start <= end:
+        mid = (start + end) // 2
+
+        # target is found
+        if target == nums[mid]:
+            return mid
+
+        # left sorted portion
+        if nums[start] <= nums[mid]:
+            if target > nums[mid] or target < nums[start]:
+                start = mid + 1
+            else:
+                end = mid - 1
+
+        # right sorted portion
+        else:
+            if target < nums[mid] or target > nums[end]:
+                end = mid - 1
+            else:
+                start = mid + 1
+    return -1
+```
+- Time complexity, `O(log n)`
+---
 
 ## Linked List
 
