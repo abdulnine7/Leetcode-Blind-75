@@ -529,7 +529,7 @@ def minWindow(self, s: str, t: str) -> str:
 
 ## Stack
 
-### [20. Valid Parentheses](https://leetcode.com/problems/valid-parentheses/)
+### [20. Valid Parentheses](https://leetcode.com/problems/valid-parentheses/) <sup style="color:#2DB55D">Easy</sup>
 
 Given a string `s` containing just the characters `'('`,` ')'`, `'{'`, `'}'`, `'['` and `']'`, determine if the input string is valid.
 
@@ -574,7 +574,7 @@ Note:
 - In Binary Search when we find the middle value between the left and right bounds (their average) we can equivalently do: `mid = left + (right - left) // 2`, if we are concerned left + right would cause overflow (which would occur **if we are searching a massive array using a language like Java or C** that has fixed size integer types).
 - In python we can simply do  `mid = (left + right ) // 2`
 
-### [153. Find Minimum in Rotated Sorted Array](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/)
+### [153. Find Minimum in Rotated Sorted Array](https://leetcode.com/problems/find-minimum-in-rotated-sorted-array/) <sup style="color:#FFB801">Medium</sup>
 
 Suppose an array of length `n` sorted in ascending order is rotated between `1` and `n` times. For example, the array `nums = [0,1,2,4,5,6,7]` might become:
 
@@ -589,7 +589,7 @@ You must write an algorithm that runs in `O(log n)` time.
 
 ##### Solution:
 
-- There is a point `pivot` in which is the minimum of array.
+- There is a point `pivot` in array which is the minimum of array.
 - In this solution the main idea for our checks is to converge the `start` and `end` bounds on the start of the `pivot/minimum`, and never disqualify the index for a possible minimum value.
 - `if nums[mid] > nums[end]` is True, 
     - We KNOW that the `pivot/minimum` value must have occurred somewhere to the right of `mid`, which is why the values wrapped around and became smaller, hence we update, `start = mid + 1` 
@@ -619,7 +619,7 @@ def findMin(self, nums: List[int]) -> int:
 - Time complexity, `O(log n)`
 ---
 
-### [33. Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array/)
+### [33. Search in Rotated Sorted Array](https://leetcode.com/problems/search-in-rotated-sorted-array/) <sup style="color:#FFB801">Medium</sup>
 
 There is an integer array `nums` sorted in ascending order (with **distinct** values).
 
@@ -633,11 +633,11 @@ You must write an algorithm with **O(log n)** runtime complexity.
 
 - Just like every binary search we take the `mid` and check if it is the target. If not then we move further.
 - If we have `nums[start] <= nums[mid]` means left portion of array is sorted.
-    - Eg. array=[<u>3,4,5,6,7</u>,8,9,1,2] where `array[start]=3` and `array[mid]=7`
+    - Eg. array=[<u>**3,4,5,6,7**</u>,8,9,1,2] where `array[start]=3` and `array[mid]=7`
     - So we now know ***if target is greater than mid element or if it is smaller than start element*** that means it should be on right side of mid element. Hence `start = mid + 1` .
     - Otherwise, it should be on left side of mid element. Hence we do `end = mid - 1`
-- If we have `nums[start] > nums[mid]` means left portion of array is sorted.
-    - Eg. array=[8,9,1,2,<u>3,4,5,6,7</u>] where `array[start]=8` and `array[mid]=3`
+- If we have `nums[start] > nums[mid]` means right portion of array is sorted.
+    - Eg. array=[8,9,1,2,<u>**3,4,5,6,7**</u>] where `array[start]=8` and `array[mid]=3`
     - So we now know ***if target is less than mid element or if it is greater than end element*** that means it should be on left side of mid element. Hence `end = mid - 1` .
     - Otherwise, it should be on right side of mid element. Hence we do `start = mid + 1`
     
@@ -672,6 +672,118 @@ def search(self, nums: List[int], target: int) -> int:
 ---
 
 ## Linked List
+
+### [206. Reverse Linked List](https://leetcode.com/problems/reverse-linked-list/) <sup style="color:#2DB55D">Easy</sup>
+
+Given the `head` of a singly linked list, reverse the list, and return the *reversed* list.
+
+##### Solution:
+
+- In this we use the `curr` node as pointer to iterate over the linked list.
+- In each iteration we, put the current node behind previous node untill there are no current nodes. In these following steps, 
+    - We record the node next to current node and keep it in `temp`.
+    - Then we set the next of current to the previous recorded node.
+    - And mark the current node previous for next iteration.
+    - And then we move the current to the next node that is pointed by `temp`.
+- In the end we will have variable `prev/curr` pointing to the last node of linked list, which is now reversed so the last node is new head of linked list, hence we return `prev`
+
+```python
+def reverseList(self, head: ListNode) -> ListNode:
+    prev, curr = None, head
+
+    while curr:
+        temp = curr.next
+        curr.next = prev
+        prev = curr
+        curr = temp
+    return prev
+```
+- Time complexity `O(n)` as we visit each node only once.
+---
+
+### [21. Merge Two Sorted Lists](https://leetcode.com/problems/merge-two-sorted-lists/) <sup style="color:#2DB55D">Easy</sup>
+
+You are given the *heads* of two sorted linked lists `list1` and `list2`.
+
+Merge the two lists into one **sorted** list. The list should be made by splicing together the nodes of the first two lists.
+
+Return the *head of the merged linked list*.
+
+##### Solution:
+
+- We create a new node a set two different pointers to it. One to keep pointing to it and one to iterate over and add elements to new list it.
+- Then we iterate over two lists `list1` and `list2` and add elements to our list in *sorted order*.
+- Once any of the list is exhausted we add the rest of the other list to our list.
+- Then we return next of the node that we created at the start, so that we only have elements from `list1` and `list2` in our new sorted list.
+
+```python
+def mergeTwoLists(self, list1: ListNode, list2: ListNode) -> ListNode:
+    head = curr = ListNode()
+
+    while list1 and list2:
+        if list1.val < list2.val:
+            curr.next = list1
+            list1 = list1.next
+        else:
+            curr.next = list2
+            list2 = list2.next
+        node = node.next
+
+    # Add the remaining of the list that still has elements
+    curr.next = list1 or list2
+
+    return head.next
+```
+- Time complexity, `O(n)` where `n` is length of shorter linked list among the two.
+---
+
+### []()
+
+##### Solution:
+
+-
+
+```python
+
+```
+-
+---
+
+### []()
+
+##### Solution:
+
+-
+
+```python
+
+```
+-
+---
+
+### []()
+
+##### Solution:
+
+-
+
+```python
+
+```
+-
+---
+
+### []()
+
+##### Solution:
+
+-
+
+```python
+
+```
+-
+---
 
 ## Trees
 
