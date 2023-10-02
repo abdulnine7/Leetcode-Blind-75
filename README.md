@@ -737,28 +737,99 @@ def mergeTwoLists(self, list1: ListNode, list2: ListNode) -> ListNode:
 - Time complexity, `O(n)` where `n` is length of shorter linked list among the two.
 ---
 
-### []()
+### [143. Reorder List](https://leetcode.com/problems/reorder-list/) <sup style="color:#FFB801">Medium</sup>
+
+You are given the head of a singly linked-list. The list can be represented as:
+
+L<sub>0</sub> → L<sub>1</sub> → L<sub>2</sub> → ..... → L<sub>n-1</sub> → L<sub>n</sub>
+
+Reorder the list to be on the following form:
+
+L<sub>0</sub> → L<sub>n</sub> → L<sub>1</sub> → L<sub>n-1</sub> → L<sub>2</sub> → L<sub>n-2</sub> → ....
+
+You may not modify the values in the list's nodes. Only nodes themselves may be changed.
+
+Example:\
+<img src="https://assets.leetcode.com/uploads/2021/03/09/reorder2-linked-list.jpg"  width="500">
 
 ##### Solution:
 
--
+- We craft a very simple 4 step solution for this,
+    - Find the middle of the linked list *(Using Fast and slow method)*
+    - Set the `first` & `second` pointer to first and second half.
+    - We reverse the second half. *(Like in above problem 206)*
+    - Finally, we merge the two halves. 
 
 ```python
+def reorderList(self, head: ListNode) -> None:
+    # find middle
+    slow, fast = head, head.next
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
 
+    # set the first and second pointer to first and second half
+    second = slow.next
+    slow.next = None # We do this to break the 1st half connection with 2nd
+    first = head
+
+    # reverse second half
+    prev = None
+    while second:
+        tmp = second.next
+        second.next = prev
+        prev = second
+        second = tmp
+    seecond = prev
+
+
+    # merge two halfs first and second
+    # we will have more eleeent in first in case of odd number of elements
+    while second:
+        tmp1, tmp2 = first.next, second.next
+        first.next = second
+        second.next = tmp1
+        first, second = tmp1, tmp2
 ```
--
+- Time complexity, `O(n)`
 ---
 
-### []()
+### [19. Remove Nth Node From End of List](https://leetcode.com/problems/remove-nth-node-from-end-of-list/description/) <sup style="color:#FFB801">Medium</sup>
+
+Given the `head` of a *linked list*, remove the **k<sup>th</sup>** node from the end of the list and return its head.
 
 ##### Solution:
 
--
+- Let's say the *n = length of linked list*.
+- In this we use two different pointers to head (`fast` and `slow`) node then,and we traverse `k` steps with `fast`.
+- Now once `fast` is `k` steps ahead, we traverse both `slow` and `fast` untill fast reaches end node of linked list. That means fast is on last node, `n-1` .
+- Hence fast has traversed, `n-1` and slow has traversed, `n-1-k`.
+- This means that, `slow` is 1 step away from k<sup>th</sup> node from the end.
+- So we do `slow.next = slow.next.next` to delete the k<sup>th</sup> node from the end.
+
 
 ```python
+def removeNthFromEnd(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:
+    fast, slow = head, head
 
+    # traverse k steps with fast
+    for _ in range(k): 
+        fast = fast.next
+
+    # if fast is null, means k = length of list, so we delete head,
+    # as the kth node from end will be 1st node in the list.
+    if not fast: 
+        return head.next
+
+    while fast.next: 
+        fast, slow = fast.next, slow.next
+
+    # delete the node
+    slow.next = slow.next.next
+
+    return head
 ```
--
+- Time complexity, `O(n)`
 ---
 
 ### []()
