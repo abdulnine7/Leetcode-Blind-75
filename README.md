@@ -912,6 +912,143 @@ def mergeList(self, l1, l2):
 
 ## Trees
 
+### [226. Invert Binary Tree](https://leetcode.com/problems/invert-binary-tree/)
+
+Given the `root` of a binary tree, invert the tree, and return its `root`.
+
+##### Solution:
+
+- In this we have to change tree to its mirror image. That means all the *left nodes will be right* **and** *right nodes will be left*.
+- To do this we call `invertTree` function to interchange `left` and `right` branches and inside the function we make recursive call on `left` and `right` subtree, so that their childrens are interchanged too.
+
+```python
+def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
+    if not root:
+        return None
+    
+    # swap the children
+    root.left, root.right = root.right, root.left
+    
+    # make 2 recursive calls
+    self.invertTree(root.left)
+    self.invertTree(root.right)
+    return root
+```
+- Time complexity, `O(n)` where n is number of nodes in the tree.
+---
+
+### [104. Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/)
+
+Given the `root` of a binary tree, `return` its **maximum depth**.
+
+A binary tree's **maximum depth** is the number of nodes along the longest path from the root node down to the farthest leaf node.
+
+
+##### Solution:
+
+1. Depth First Search (DFS) - Recursive
+    - This one is fairly simple, we recursively check of `left` or `right` subtree is longer and we return `1 + longer of the two branches` to the level above.
+
+2. Depth First Search (DFS) - Iterative
+    - Here we uses a `stack` to keep track of the nodes in the tree. We starts by adding the `root` node and its depth (which is 1) to the `stack`.
+    - Then we go in while loop, In each iteration of the loop, we pop the top node and its depth from the stack. if depth is greater the `result` we update `result`.
+    - We then adds the left and right child nodes of the current node to the stack, along with their respective depths (which are the depth of the current node plus 1).
+    
+3. Breadth First Search (BFS)
+    - In BFS we track the *levels* deep we go to iterate over all the elements.
+    - In each level we increase the `level` counter.
+    - At the end we return the `level` variable.
+
+```python
+# RECURSIVE DFS
+def maxDepth(self, root: TreeNode) -> int:
+    if not root:
+        return 0
+
+    # Get the depth of left and right subtree
+    left, right = self.maxDepth(root.left), self.maxDepth(root.right)
+
+    return 1 + max(left, right)
+```
+
+```python
+# ITERATIVE DFS
+def maxDepth(self, root: TreeNode) -> int:
+    stack = [[root, 1]]
+    result = 0
+
+    while stack:
+        node, depth = stack.pop()
+
+        if node:
+            result = max(result, depth)
+            stack.append([node.left, depth + 1])
+            stack.append([node.right, depth + 1])
+    return result
+```
+
+```python
+# BFS
+def maxDepth(self, root: TreeNode) -> int:
+    q = deque()
+    if root:
+        q.append(root)
+
+    level = 0
+
+    while q:
+
+        # Visiting all the nodes at a certain level and adding their
+        # children to queue to visit in next level
+        for i in range(len(q)):
+            node = q.popleft()
+            if node.left:
+                q.append(node.left)
+            if node.right:
+                q.append(node.right)
+        level += 1
+    return level
+
+```
+- Time complexity, `O(n)` in all three cases, as we are visiting each node only once. `n` is number of nodes in the tree.
+---
+
+### []()
+
+##### Solution:
+
+-
+
+```python
+
+```
+-
+---
+
+### []()
+
+##### Solution:
+
+-
+
+```python
+
+```
+-
+---
+
+### []()
+
+##### Solution:
+
+-
+
+```python
+
+```
+-
+---
+
 ## Tries
 
 ## Heap / Priority Queue
