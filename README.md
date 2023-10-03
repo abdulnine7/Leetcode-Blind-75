@@ -832,28 +832,82 @@ def removeNthFromEnd(self, head: Optional[ListNode], k: int) -> Optional[ListNod
 - Time complexity, `O(n)`
 ---
 
-### []()
+### [141. Linked List Cycle](https://leetcode.com/problems/linked-list-cycle/)
+
+Given `head`, the head of a* linked list*, determine if the linked list has a cycle in it.
+
+There is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the `next` pointer. Internally, `pos` is used to denote the index of the node that tail's `next` pointer is connected to. **Note that `pos` is not passed as a parameter.**
+
+Return `true` if there is a cycle in the linked list. Otherwise, return `false`.
 
 ##### Solution:
 
--
+- Here we use the **Floyd’s Cycle-Finding Algorithm (tortoise and the hare algorithm)**
+    - Traverse linked list using two pointers.
+    - Move one pointer(`slow`) by one and another pointer(`fast`) by two.
+    - If these pointers meet at the same node then there is a loop. If pointers do not meet then linked list doesn’t have a loop.
+
 
 ```python
+def hasCycle(self, head: ListNode) -> bool:
+    slow, fast = head, head
 
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        if slow == fast:
+            return True
+    return False
 ```
--
+- Time complexity, `O(n)`
 ---
 
-### []()
+### [23. Merge k Sorted Lists](https://leetcode.com/problems/merge-k-sorted-lists/)
 
+You are given an array of `k` linked-lists `lists`, each linked-list is sorted in ascending order.
+
+*Merge all the linked-lists into one sorted linked-list and return it.*
 ##### Solution:
 
--
+- In this we merge consecutive the lists in `lists` into and create a new `mergedLists` array containing half of the `lists`.
+- Then we set `lists = mergedLists`, and then do the same operation. We repeat untill the size of `lists` is reduced to `1` and all the `lists` are merged.
+- Then we return the final list, `lists[0]` that is remaining in `lists`.
 
 ```python
 
+def mergeKLists(self, lists: List[ListNode]) -> ListNode:
+    if not lists or len(lists) == 0:
+        return None
+
+    while len(lists) > 1:
+        mergedLists = []
+        for i in range(0, len(lists), 2):
+            l1 = lists[i]
+            l2 = lists[i + 1] if (i + 1) < len(lists) else None
+            mergedLists.append(self.mergeList(l1, l2))
+        lists = mergedLists
+    return lists[0]
+
+
+def mergeList(self, l1, l2):
+    dummy = ListNode()
+    tail = dummy
+
+    while l1 and l2:
+        if l1.val < l2.val:
+            tail.next = l1
+            l1 = l1.next
+        else:
+            tail.next = l2
+            l2 = l2.next
+        tail = tail.next
+    if l1:
+        tail.next = l1
+    if l2:
+        tail.next = l2
+    return dummy.next
 ```
--
+- Time complexity, `O(n)`
 ---
 
 ## Trees
