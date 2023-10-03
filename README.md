@@ -431,7 +431,7 @@ Output: 4 \
 Explanation: Replace the two 'A's with two 'B's or vice versa.
 
 
-##### Solution:
+#### Solution:
 
 - In this again we use 2 pointers and a *frequency dictionary* (`count`) to keep count of characters in current window.
 - We track the window with `left` and `right` pointers, and we also keep record `maxf` ie *maximum frequency of any character in the current window*.
@@ -467,7 +467,7 @@ substring** of `s` such that every character in `t` (**including duplicates**) i
 
 The testcases will be generated such that the answer is **unique**.
 
-##### Solution:
+#### Solution:
 
 - In this we maintain 2 dictionaries, 2 variables `have` and `need`
     - `countT` to keep frequency count of chatacters of `t`
@@ -538,7 +538,7 @@ An input string is valid if:
 2. Open brackets must be closed in the correct order.
 3. Every close bracket has a corresponding open bracket of the same type.
 
-##### Solution:
+#### Solution:
 
 - Here we create a dictionary (`Map`) of parenthesis, we use *closing parenthesis as key* and its corresponding *opening parenthesis as value*. And a list `stack` to track opening parenthesis.
 - We then iterate string `s` and for each character `c`.
@@ -587,7 +587,7 @@ Given the sorted rotated array `nums` of **unique elements**, return the *minimu
 
 You must write an algorithm that runs in `O(log n)` time.
 
-##### Solution:
+#### Solution:
 
 - There is a point `pivot` in array which is the minimum of array.
 - In this solution the main idea for our checks is to converge the `start` and `end` bounds on the start of the `pivot/minimum`, and never disqualify the index for a possible minimum value.
@@ -629,7 +629,7 @@ Given the array `nums` **after** the possible rotation and an integer `target`, 
 
 You must write an algorithm with **O(log n)** runtime complexity.
 
-##### Solution:
+#### Solution:
 
 - Just like every binary search we take the `mid` and check if it is the target. If not then we move further.
 - If we have `nums[start] <= nums[mid]` means left portion of array is sorted.
@@ -677,7 +677,7 @@ def search(self, nums: List[int], target: int) -> int:
 
 Given the `head` of a singly linked list, reverse the list, and return the *reversed* list.
 
-##### Solution:
+#### Solution:
 
 - In this we use the `curr` node as pointer to iterate over the linked list.
 - In each iteration we, put the current node behind previous node untill there are no current nodes. In these following steps, 
@@ -709,7 +709,7 @@ Merge the two lists into one **sorted** list. The list should be made by splicin
 
 Return the *head of the merged linked list*.
 
-##### Solution:
+#### Solution:
 
 - We create a new node a set two different pointers to it. One to keep pointing to it and one to iterate over and add elements to new list it.
 - Then we iterate over two lists `list1` and `list2` and add elements to our list in *sorted order*.
@@ -752,7 +752,7 @@ You may not modify the values in the list's nodes. Only nodes themselves may be 
 Example:\
 <img src="https://assets.leetcode.com/uploads/2021/03/09/reorder2-linked-list.jpg"  width="500">
 
-##### Solution:
+#### Solution:
 
 - We craft a very simple 4 step solution for this,
     - Find the middle of the linked list *(Using Fast and slow method)*
@@ -798,7 +798,7 @@ def reorderList(self, head: ListNode) -> None:
 
 Given the `head` of a *linked list*, remove the **k<sup>th</sup>** node from the end of the list and return its head.
 
-##### Solution:
+#### Solution:
 
 - Let's say the *n = length of linked list*.
 - In this we use two different pointers to head (`fast` and `slow`) node then,and we traverse `k` steps with `fast`.
@@ -840,7 +840,7 @@ There is a cycle in a linked list if there is some node in the list that can be 
 
 Return `true` if there is a cycle in the linked list. Otherwise, return `false`.
 
-##### Solution:
+#### Solution:
 
 - Here we use the **Floyd’s Cycle-Finding Algorithm (tortoise and the hare algorithm)**
     - Traverse linked list using two pointers.
@@ -867,7 +867,7 @@ def hasCycle(self, head: ListNode) -> bool:
 You are given an array of `k` linked-lists `lists`, each linked-list is sorted in ascending order.
 
 *Merge all the linked-lists into one sorted linked-list and return it.*
-##### Solution:
+#### Solution:
 
 - In this we merge consecutive the lists in `lists` into and create a new `mergedLists` array containing half of the `lists`.
 - Then we set `lists = mergedLists`, and then do the same operation. We repeat untill the size of `lists` is reduced to `1` and all the `lists` are merged.
@@ -916,7 +916,7 @@ def mergeList(self, l1, l2):
 
 Given the `root` of a binary tree, invert the tree, and return its `root`.
 
-##### Solution:
+#### Solution:
 
 - In this we have to change tree to its mirror image. That means all the *left nodes will be right* **and** *right nodes will be left*.
 - To do this we call `invertTree` function to interchange `left` and `right` branches and inside the function we make recursive call on `left` and `right` subtree, so that their childrens are interchanged too.
@@ -944,7 +944,7 @@ Given the `root` of a binary tree, `return` its **maximum depth**.
 A binary tree's **maximum depth** is the number of nodes along the longest path from the root node down to the farthest leaf node.
 
 
-##### Solution:
+#### Solution:
 
 1. Depth First Search (DFS) - Recursive
     - This one is fairly simple, we recursively check of `left` or `right` subtree is longer and we return `1 + longer of the two branches` to the level above.
@@ -1015,7 +1015,7 @@ def maxDepth(self, root: TreeNode) -> int:
 
 ### []()
 
-##### Solution:
+#### Solution:
 
 -
 
@@ -1027,7 +1027,7 @@ def maxDepth(self, root: TreeNode) -> int:
 
 ### []()
 
-##### Solution:
+#### Solution:
 
 -
 
@@ -1039,7 +1039,7 @@ def maxDepth(self, root: TreeNode) -> int:
 
 ### []()
 
-##### Solution:
+#### Solution:
 
 -
 
@@ -1073,7 +1073,7 @@ def maxDepth(self, root: TreeNode) -> int:
 
 ### []()
 
-##### Solution:
+#### Solution:
 
 -
 
