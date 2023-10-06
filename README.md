@@ -1204,28 +1204,64 @@ def isValidBST(self, root: TreeNode) -> bool:
 - Time complexity, `O(n)` in all cases as we need to visit each node to verify.
 ---
 
-### []()
+### [230. Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst/description/)
+
+Given the `root` of a binary search tree, and an integer `k`, return the *kth smallest value (**1-indexed**) of all the values of the nodes in the tree*.
 
 #### Solution:
 
--
+- In this we do **in-order traversal using `stack`**, (just like queue in BFS), but instead of visiting the element at each level we visit the smallest element and reduce the count `k` each time.
+- First we keep going `left` and add elements to end of stack, such that our stack is in ascending order.
+- When there are no more left to go we pop element and reduce `k` by `1`.
+- Then we move right and keep going left and maintain the stack in the ascending order `(in-order)`
+- we keep on doing this as long as we can go left or we have elements in the `stack`. Until we reduce the `k` to zero and find the K<sup>th</sup> smallest number.
 
 ```python
+def kthSmallest(self, root: TreeNode, k: int) -> int:
+    stack = []
+    curr = root
 
+    while stack or curr:
+
+        while curr:
+            stack.append(curr)
+            curr = curr.left
+
+        curr = stack.pop()
+        k -= 1
+
+        if k == 0:
+            return curr.val
+        curr = curr.right
 ```
-- Time complexity, `O()`
+- Time complexity, `O(log n)`
 ---
 
-### []()
+### [105. Construct Binary Tree from Preorder and Inorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/description/)
+
+Given two integer arrays `preorder` and `inorder` where `preorder` is the preorder traversal of a binary tree and `inorder` is the inorder traversal of the same tree, construct and return the binary tree.
 
 #### Solution:
 
--
+- In this we use the tactic **divide and conquer**.
+- Here we first locate the `mid` of `inorder` by searching the 0<sup>th</sup> element in `preorder`.
+- Once we found the mid we know **preorder for left subtree** will be from 1<sup>st</sup> element of preorder and it will have `mid` number of elements in total and **inorder for left subtree** will be left of the `mid` in inorder array.
+- Similarly for the right subtree.
 
 ```python
+    def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
+        if not preorder or not inorder:
+            return None
 
+        root = TreeNode(preorder[0])
+        mid = inorder.index(preorder[0]) # Find mid of inorder
+
+        root.left = self.buildTree(preorder[1 : mid + 1], inorder[:mid])
+        root.right = self.buildTree(preorder[mid + 1 :], inorder[mid + 1 :])
+        
+        return root
 ```
-- Time complexity, `O()`
+- Time complexity, `O(n)` as we have to visit all the elements.
 ---
 
 ### []()
