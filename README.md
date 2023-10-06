@@ -1161,7 +1161,31 @@ Given the `root` of a binary tree, *determine if it is a valid binary search tre
 
 #### Solution:
 
--
+- In this problem, a simple way to check is do In-order traverse and add the elements to an array and check if they are in ascending order or not.
+
+```python
+def isValidBST(self, root: Optional[TreeNode]) -> bool:
+
+    def inorder(root, arr):
+        if root == None: return
+
+        if root.left:
+            inorder(root.left, arr)
+
+        arr.append(root.val) # Visit the node in-order
+
+        if root.right:
+            inorder(root.right, arr)
+
+    a = []
+    inorder(root, a)
+    return all([a[i] < a[i+1] for i in range(len(a)-1)]) # Check if all elements are ascending
+```
+
+- Another way to do this is create a function `valid()` , where we will pass it `left` and `right` ancestor for the given node.
+- When we start with `root` we say its `left` and `right` ancestor are `-inf` and `inf` respectively.
+- When we go visit `left` node we pass the value of left ancestor of parent node and the right ancestor will become the parent node.
+- When we go visit `right` node we pass the value of parent node as left ancestor and the right ancestor will be remain the right ancestor of parent node.
 
 ```python
 def isValidBST(self, root: TreeNode) -> bool:
@@ -1177,7 +1201,7 @@ def isValidBST(self, root: TreeNode) -> bool:
 
     return valid(root, float("-inf"), float("inf"))
 ```
-- Time complexity, `O()`
+- Time complexity, `O(n)` in all cases as we need to visit each node to verify.
 ---
 
 ### []()
