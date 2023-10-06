@@ -1013,16 +1013,171 @@ def maxDepth(self, root: TreeNode) -> int:
 - Time complexity, `O(n)` in all three cases, as we are visiting each node only once. `n` is number of nodes in the tree.
 ---
 
-### []()
+### [100. Same Tree](https://leetcode.com/problems/same-tree/)
+
+Given the `roots` of two binary trees `p` and `q`, write a function to check if they are the same or not.
+
+Two binary trees are considered the same if they are structurally identical, and the nodes have the same value.
+
+#### Solution:
+
+- In this we check if roots are same of `p` and `q`.
+- Then we recursively check of left and right branches are same for `p` and `q`.
+
+```python
+def isSameTree(self, p: TreeNode, q: TreeNode) -> bool:
+    
+    if not p and not q:
+        return True
+
+    if p and q and p.val == q.val:
+        return self.isSameTree(p.left, q.left) and self.isSameTree(p.right, q.right)
+    else:
+        return False
+```
+- Time complexity, `O(n)`
+---
+
+### [572. Subtree of Another Tree](https://leetcode.com/problems/subtree-of-another-tree/)
+
+Given the roots of two binary trees `root` and `subRoot`, return `true` if there is a subtree of root with the same structure and node values of `subRoot` and `false` otherwise.
+
+A subtree of a binary tree `tree` is a tree that consists of a node in `tree` and all of this node's descendants. The tree `tree` could also be considered as a subtree of itself.
+
+<img src="https://assets.leetcode.com/uploads/2021/04/28/subtree1-tree.jpg"  width="350">
+
+#### Solution:
+
+- In this we chech if `s` and `t` are same tree using the function `isSameTree(p,q)` that we made in Problem No. 100.
+- If `s` and `t` are not same we check if `s.left` is same as `t` **or** `s.right` is same as `t`.
+- Like this we recursively check if any branch in the tree `s` is same as tree `t`.
+
+```python
+def isSubtree(self, s: TreeNode, t: TreeNode) -> bool:
+
+    if not t:
+        return True
+    if not s:
+        return False
+
+    if self.isSameTree(s, t): # We use this function from above problem #100
+        return True
+
+    return self.isSubtree(s.left, t) or self.isSubtree(s.right, t)
+```
+- Time complexity, `O(m⋅n)` , where `m` and `n` are the number of nodes in `s` and `t`, respectively. 
+
+#### Note: 
+-  We can improve the time complexity of this code by using a more efficient algorithm. One way to do this is to use a pre-order traversal of both trees and compare the resulting strings.
+- The time complexity to check if the string for `t` is a substring of the string for `s` is `O(m⋅n)`, where `m` and `n` are the lengths of the strings for `s` and `t`, respectively. However, in practice, the time complexity is often much lower than `O(m⋅n)` due to the use of efficient string matching algorithms such as the **Knuth-Morris-Pratt algorithm** or the **Boyer-Moore algorithm**. These algorithms can reduce the time complexity to `O(m+n)` in the worst case.
+```python
+def preorder(node):
+    if not node:
+        return "null"
+    return "#" + str(node.val) + " " + preorder(node.left) + " " + preorder(node.right)
+```
+---
+
+### [235. Lowest Common Ancestor of a Binary Search Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)
+
+Given a binary search tree (BST), find the lowest common ancestor (LCA) node of two given nodes in the BST.
+
+According to the definition of LCA on Wikipedia: “The lowest common ancestor is defined between two nodes p and q as the lowest node in T that has both p and q as descendants (where we allow a node to be a descendant of itself).”
+
+<img src="https://afteracademy.com/images/lca-of-binary-tree-example2-a42f5b48898c146d.png" width="500" alt="">
+
+#### Solution:
+
+- In this we go in a loop untill both `p` and `q` nodes are on opposite side.
+- Once we come across that `p` and `q` are on different side we return that node.
+
+```python
+def lowestCommonAncestor(self, root: TreeNode, p: TreeNode, q: TreeNode) -> TreeNode:
+
+    while True:
+        # Both p and q are on right side, we dig more deep
+        if root.val < p.val and root.val < q.val:
+            root = root.right
+
+        # Both p and q are on left side, we dig more deep
+        elif root.val > p.val and root.val > q.val:
+            root = root.left
+
+        # We found the node 'root' where p and q are on opposite side,
+        # hence 'root' is the common ancestor of the two.
+        else:
+            return root
+```
+- Time complexity, `O(log n)`
+---
+
+### [102. Binary Tree Level Order Traversal](https://leetcode.com/problems/binary-tree-level-order-traversal/)
+
+Given the `root` of a binary tree, return the level order traversal of its nodes' values. (i.e., from left to right, level by level).
+
+| Example Tree | Output |
+| :----: | :----: |
+| <img src="https://assets.leetcode.com/uploads/2021/02/19/tree1.jpg" width="180" alt=""> | `[[3],[9,20],[15,7]]` |
+
+
+#### Solution:
+
+- In this we do simple **BFS search**, and at each level we create an array of elements `val` at that level.
+
+```python
+def levelOrder(self, root: TreeNode) -> List[List[int]]:
+    result = []
+    q = collections.deque()
+
+    # BFS Search
+    if root:
+        q.append(root)
+    while q:
+        val = [] 
+
+        for i in range(len(q)): # At each level fill the new array 'val'
+            node = q.popleft()
+            val.append(node.val)
+            if node.left:
+                q.append(node.left)
+            if node.right:
+                q.append(node.right)
+
+        result.append(val) # Apppend array 'val' for each level to result array
+    return result
+```
+- Time complexity, `O(n)`
+---
+
+### [98. Validate Binary Search Tree](https://leetcode.com/problems/validate-binary-search-tree/)
+
+Given the `root` of a binary tree, *determine if it is a valid binary search tree (BST)*.
+
+- A **valid BST** is defined as follows:
+    - The **left** subtree of a node contains only nodes with keys **less than** the node's key.
+    - The **right** subtree of a node contains only nodes with keys **greater than** the node's key.
+    - Both the left and right subtrees must also be binary search trees.
+
 
 #### Solution:
 
 -
 
 ```python
+def isValidBST(self, root: TreeNode) -> bool:
 
+    def valid(node, left, right):
+        if not node:
+            return True
+
+        if left >= node.val or right <= node.val:
+            return False
+
+        return valid(node.left, left, node.val) and valid(node.right, node.val, right)
+
+    return valid(root, float("-inf"), float("inf"))
 ```
--
+- Time complexity, `O()`
 ---
 
 ### []()
@@ -1034,7 +1189,7 @@ def maxDepth(self, root: TreeNode) -> int:
 ```python
 
 ```
--
+- Time complexity, `O()`
 ---
 
 ### []()
@@ -1046,7 +1201,31 @@ def maxDepth(self, root: TreeNode) -> int:
 ```python
 
 ```
+- Time complexity, `O()`
+---
+
+### []()
+
+#### Solution:
+
 -
+
+```python
+
+```
+- Time complexity, `O()`
+---
+
+### []()
+
+#### Solution:
+
+-
+
+```python
+
+```
+- Time complexity, `O()`
 ---
 
 ## Tries
@@ -1080,5 +1259,5 @@ def maxDepth(self, root: TreeNode) -> int:
 ```python
 
 ```
--
+- Time complexity, `O()`
 ---
