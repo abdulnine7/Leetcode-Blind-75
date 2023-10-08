@@ -832,7 +832,7 @@ def removeNthFromEnd(self, head: Optional[ListNode], k: int) -> Optional[ListNod
 - Time complexity, `O(n)`
 ---
 
-### [141. Linked List Cycle](https://leetcode.com/problems/linked-list-cycle/)
+### [141. Linked List Cycle](https://leetcode.com/problems/linked-list-cycle/)  <sup style="color:#2DB55D">Easy</sup>
 
 Given `head`, the head of a* linked list*, determine if the linked list has a cycle in it.
 
@@ -862,7 +862,7 @@ def hasCycle(self, head: ListNode) -> bool:
 - Time complexity, `O(n)`
 ---
 
-### [23. Merge k Sorted Lists](https://leetcode.com/problems/merge-k-sorted-lists/)
+### [23. Merge k Sorted Lists](https://leetcode.com/problems/merge-k-sorted-lists/) <sup style="color:#FF2D55">Hard</sup>
 
 You are given an array of `k` linked-lists `lists`, each linked-list is sorted in ascending order.
 
@@ -912,7 +912,7 @@ def mergeList(self, l1, l2):
 
 ## Trees
 
-### [226. Invert Binary Tree](https://leetcode.com/problems/invert-binary-tree/)
+### [226. Invert Binary Tree](https://leetcode.com/problems/invert-binary-tree/)  <sup style="color:#2DB55D">Easy</sup>
 
 Given the `root` of a binary tree, invert the tree, and return its `root`.
 
@@ -937,7 +937,7 @@ def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
 - Time complexity, `O(n)` where n is number of nodes in the tree.
 ---
 
-### [104. Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/)
+### [104. Maximum Depth of Binary Tree](https://leetcode.com/problems/maximum-depth-of-binary-tree/) <sup style="color:#2DB55D">Easy</sup>
 
 Given the `root` of a binary tree, `return` its **maximum depth**.
 
@@ -1013,7 +1013,7 @@ def maxDepth(self, root: TreeNode) -> int:
 - Time complexity, `O(n)` in all three cases, as we are visiting each node only once. `n` is number of nodes in the tree.
 ---
 
-### [100. Same Tree](https://leetcode.com/problems/same-tree/)
+### [100. Same Tree](https://leetcode.com/problems/same-tree/) <sup style="color:#2DB55D">Easy</sup>
 
 Given the `roots` of two binary trees `p` and `q`, write a function to check if they are the same or not.
 
@@ -1038,7 +1038,7 @@ def isSameTree(self, p: TreeNode, q: TreeNode) -> bool:
 - Time complexity, `O(n)`
 ---
 
-### [572. Subtree of Another Tree](https://leetcode.com/problems/subtree-of-another-tree/)
+### [572. Subtree of Another Tree](https://leetcode.com/problems/subtree-of-another-tree/) <sup style="color:#2DB55D">Easy</sup>
 
 Given the roots of two binary trees `root` and `subRoot`, return `true` if there is a subtree of root with the same structure and node values of `subRoot` and `false` otherwise.
 
@@ -1078,7 +1078,7 @@ def preorder(node):
 ```
 ---
 
-### [235. Lowest Common Ancestor of a Binary Search Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/)
+### [235. Lowest Common Ancestor of a Binary Search Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/) <sup style="color:#FFB801">Medium</sup>
 
 Given a binary search tree (BST), find the lowest common ancestor (LCA) node of two given nodes in the BST.
 
@@ -1111,7 +1111,7 @@ def lowestCommonAncestor(self, root: TreeNode, p: TreeNode, q: TreeNode) -> Tree
 - Time complexity, `O(log n)`
 ---
 
-### [102. Binary Tree Level Order Traversal](https://leetcode.com/problems/binary-tree-level-order-traversal/)
+### [102. Binary Tree Level Order Traversal](https://leetcode.com/problems/binary-tree-level-order-traversal/) <sup style="color:#FFB801">Medium</sup>
 
 Given the `root` of a binary tree, return the level order traversal of its nodes' values. (i.e., from left to right, level by level).
 
@@ -1149,7 +1149,7 @@ def levelOrder(self, root: TreeNode) -> List[List[int]]:
 - Time complexity, `O(n)`
 ---
 
-### [98. Validate Binary Search Tree](https://leetcode.com/problems/validate-binary-search-tree/)
+### [98. Validate Binary Search Tree](https://leetcode.com/problems/validate-binary-search-tree/) <sup style="color:#FFB801">Medium</sup>
 
 Given the `root` of a binary tree, *determine if it is a valid binary search tree (BST)*.
 
@@ -1204,7 +1204,7 @@ def isValidBST(self, root: TreeNode) -> bool:
 - Time complexity, `O(n)` in all cases as we need to visit each node to verify.
 ---
 
-### [230. Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst/description/)
+### [230. Kth Smallest Element in a BST](https://leetcode.com/problems/kth-smallest-element-in-a-bst/description/) <sup style="color:#FFB801">Medium</sup>
 
 Given the `root` of a binary search tree, and an integer `k`, return the *kth smallest value (**1-indexed**) of all the values of the nodes in the tree*.
 
@@ -1237,7 +1237,7 @@ def kthSmallest(self, root: TreeNode, k: int) -> int:
 - Time complexity, `O(log n)`
 ---
 
-### [105. Construct Binary Tree from Preorder and Inorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/description/)
+### [105. Construct Binary Tree from Preorder and Inorder Traversal](https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/description/) <sup style="color:#FFB801">Medium</sup>
 
 Given two integer arrays `preorder` and `inorder` where `preorder` is the preorder traversal of a binary tree and `inorder` is the inorder traversal of the same tree, construct and return the binary tree.
 
@@ -1264,28 +1264,99 @@ Given two integer arrays `preorder` and `inorder` where `preorder` is the preord
 - Time complexity, `O(n)` as we have to visit all the elements.
 ---
 
-### []()
+### [124. Binary Tree Maximum Path Sum](https://leetcode.com/problems/binary-tree-maximum-path-sum/) <sup style="color:#FF2D55">Hard</sup>
+
+A **path** in a binary tree is a sequence of nodes where each pair of adjacent nodes in the sequence has an edge connecting them. A node can only appear in the sequence **at most once**. Note that the path does not need to pass through the root.
+
+The **path sum** of a path is the sum of the node's values in the path.
+
+Given the `root` of a binary tree, *return the maximum **path sum** of any **non-empty** path.*
 
 #### Solution:
 
--
+- In this we visit each node of tree in DFS and *return* maximum sum of path either in left or right direction.
+- But before we return we also check if we take this as the split node, will we have max path going in left and right direction from here. We check if max path in both direction from here is gonna be our max path sum.
+- To track the max path we use the variable `res`.
 
 ```python
+def maxPathSum(self, root: TreeNode) -> int:
+    self.res = root.val
 
+    def dfs(root):
+        if not root:
+            return 0
+
+        leftMax = dfs(root.left)
+        rightMax = dfs(root.right)
+        leftMax = max(leftMax, 0)
+        rightMax = max(rightMax, 0)
+
+        # compute max path sum WITH split
+        self.res = max(self.res, root.val + leftMax + rightMax)
+
+        # return max path sum without split
+        return root.val + max(leftMax, rightMax)
+
+    dfs(root)
+
+    return self.res
 ```
-- Time complexity, `O()`
+- Time complexity, `O(n)` as we visit all the nodes.
 ---
 
-### []()
+### [297. Serialize and Deserialize Binary Tree](https://leetcode.com/problems/serialize-and-deserialize-binary-tree/description/) <sup style="color:#FF2D55">Hard</sup>
+
+Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.
+
+Design an algorithm to serialize and deserialize a binary tree. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that a binary tree can be serialized to a string and this string can be deserialized to the original tree structure.
+
+Clarification: The input/output format is the same as how LeetCode serializes a binary tree. You do not necessarily need to follow this format, so please be creative and come up with different approaches yourself.
 
 #### Solution:
 
--
+- In this we do pre-order DFS traverse to the binary tree and create an array and then convert that array to an string to serialize.
+- To Deserialize, we do reverse dfs search where we, conver the string to array and then maintain variable `i` to track the array traversal.
+- In Deserialize, we recursively calls dfs to construct the left and right subtrees of the current node, and assigns them to the left and right attributes of the current node.
 
 ```python
+def serialize(self, root):
+    res = []
 
+    def dfs(node):
+        if not node:
+            res.append("N")
+            return
+        res.append(str(node.val))
+        dfs(node.left)
+        dfs(node.right)
+
+    dfs(root)
+    return ",".join(res)
 ```
-- Time complexity, `O()`
+```python
+def deserialize(self, data):
+    vals = data.split(",")
+    self.i = 0
+
+    def dfs():
+        # If we come across N that means the current node is null
+        # Hence it wont have left and right subtree, so we return None here.
+        if vals[self.i] == "N":
+            self.i += 1
+            return None
+
+        node = TreeNode(int(vals[self.i])) # Create and new node
+        self.i += 1 # Increase the counter
+
+        node.left = dfs()
+        node.right = dfs()
+
+        # Once the tree is created we return root.
+        return node
+
+    return dfs()
+```
+- Time complexity, `O(n)` for both the functions.
 ---
 
 ## Tries
