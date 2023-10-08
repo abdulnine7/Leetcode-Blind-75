@@ -1361,6 +1361,215 @@ def deserialize(self, data):
 
 ## Tries
 
+### [208. Implement Trie (Prefix Tree)](https://leetcode.com/problems/implement-trie-prefix-tree/description/) <sup style="color:#FFB801">Medium</sup>
+
+A **trie** (pronounced as "try") or **prefix tree** is a tree data structure used to efficiently store and retrieve keys in a dataset of strings. There are various applications of this data structure, such as autocomplete and spellchecker.
+
+Implement the Trie class:
+
+- `Trie()` Initializes the trie object.
+- `void insert(String word)` Inserts the string word into the trie.
+- `boolean search(String word)` Returns `true` if the string `word` is in the trie (i.e., was inserted before), and false otherwise.
+- `boolean startsWith(String prefix)` Returns `true` if there is a previously inserted string `word` that has the prefix `prefix`, and `false` otherwise.
+
+
+#### Solution:
+
+- Explaination is in code comments.
+
+```python
+# Create a class for each character as Node and its followup character its children
+# We use the variable end to denote that its is the end of one perfect word stored in Trie
+class Node:
+    def __init__(self):
+        self.children = [None] * 26
+        self.end = False
+```
+
+```python
+class Trie:
+    # Initialize the root of Trie, it has 26 children to start a word using any character.
+    def __init__(self):
+        self.root = Node()
+
+    # Insert the word in the Trie
+    def insert(self, word: str) -> None:
+        curr = self.root 
+
+        # Iterate over each character of word and insert it in Trie if not already there
+        for c in word:
+            i = ord(c) - ord("a") # Find i for each lower case character (0 to 25)
+
+            if curr.children[i] == None:
+                # Creating a node at index i is equal to inserting the character at i
+                curr.children[i] = Node() 
+            curr = curr.children[i]
+        
+        # Update the end character of word as `end = TRUE` denoting an end of perfect word
+        curr.end = True
+
+    # search for a perfect word in Trie
+    def search(self, word: str) -> bool:
+        curr = self.root
+
+        # Iterate over each character of word to search
+        for c in word:
+            i = ord(c) - ord("a")
+
+            # if any character not in Trie in correct order return False.
+            if curr.children[i] == None:
+                return False
+            curr = curr.children[i]
+        
+        # if all character present, check if last character is end i.e `end = TRUE`
+        return curr.end
+
+    # `startWith` function is just like search, without need to check for the `end = TRUE`
+    def startsWith(self, prefix: str) -> bool:
+        curr = self.root
+
+        for c in prefix:
+            i = ord(c) - ord("a")
+
+            if curr.children[i] == None:
+                return False
+            curr = curr.children[i]
+
+        return True
+
+```
+- Time complexity, `O(1)` to initialize Trie. But it will be `O(n)` for insert(), search() and startWith() where `n` is length of `word` passed to the respective function.
+---
+#### Another way to Implement Trie (Prefix Tree):
+Earlier we were allocating array of size 26 for each new character, resulting in waste of memory. To avoid this we can implement Trie like this:
+```python
+class Trie:
+
+    def __init__(self):
+        self.trie = {}
+
+    def insert(self, word: str) -> None:
+        t = self.trie
+		# The idea is to insert words in a linked fashion. For Ex "cars" 
+		# will be inserted as, Trie = {'c':{'a':{'r':{'s':{}}}}
+        for w in word:
+          if w not in t:
+            t[w] = {}
+          t = t[w]
+		# Another key named "end" will distinguish that the word  "cars" actually exists
+		# Without the end key it simply means that the traversed part is just prefix
+        t["end"] = True 
+
+    def search(self, word: str) -> bool:
+        t = self.trie
+		# Traverse through the word
+        for w in word:
+          if w in t:
+            t = t[w]
+          else:
+            return False
+		# As the end key denotes the existence of the word
+        return "end" in t
+
+    def startsWith(self, prefix: str) -> bool:
+        t = self.trie
+		# Traverse through the word
+        for w in prefix:
+          if w in t:
+            t = t[w]
+          else:
+            return False
+		# Here it is okay to find whether we had traversed the entire prefix or not
+        return True
+```
+---
+
+### [211. Design Add and Search Words Data Structure](https://leetcode.com/problems/design-add-and-search-words-data-structure/description/) <sup style="color:#FFB801">Medium</sup>
+
+- Design a data structure that supports adding new words and finding if a string matches any previously added string.
+
+Implement the `WordDictionary` class:
+
+- `WordDictionary()` Initializes the object.
+- `void addWord(word)` Adds word to the data structure, it can be matched later.
+- `bool search(word)` Returns `true` if there is any string in the data structure that matches `word` or `false` otherwise. `word` may contain dots `'.'` where dots can be matched with any letter.
+
+#### Solution:
+- Just like the above Trie, here we create a trie using nodes of `TrieNode` class.
+- For `addWord(word)` function we implement it same as any other Trie insert function.
+- But for `search(word)` function we need to implement a search, in which we consider `'.'` as a wild card character that matches any character.
+- So we use `dfs` search in this, whenever we come across the character `'.'` we do `dfs` search over all the children of that character.
+
+```python
+class TrieNode:
+    def __init__(self):
+        self.children = {}  # a : TrieNode
+        self.word = False
+
+
+class WordDictionary:
+    def __init__(self):
+        self.root = TrieNode()
+
+    # Insert `word` in the Trie
+    def addWord(self, word: str) -> None:
+        cur = self.root
+        for c in word:
+            if c not in cur.children:
+                cur.children[c] = TrieNode()
+            cur = cur.children[c]
+        cur.word = True
+
+    # Search `word` in the Trie
+    def search(self, word: str) -> bool:
+
+        # Using dfs to search the `word`, here `j` is the index where we start search from.
+        def dfs(j, root):
+            cur = root
+
+            for i in range(j, len(word)):
+                c = word[i]
+
+                # if c is wild card character do dfs search over all current childrens
+                # to find: if remaining part of word is present.
+                if c == ".":
+
+                    for child in cur.children.values():
+                         # if one of the dfs return TRUE that means word exist
+                        if dfs(i + 1, child):
+                            return True 
+
+                    return False # We Return FALSE if all dfs returns FALSE
+
+                else:
+
+                    # if c is not wild character and also not present in current children
+                    if c not in cur.children:
+                        return False
+
+                    cur = cur.children[c] # if c is in current node child move current ahead
+            return cur.word
+
+        return dfs(0, self.root)
+
+```
+- Time complexity, `O(n)` for addWord() function where `n` is length of word.
+- For search function, since we have limitation on number of `'.'` wild card character as 2, so 2 times we can go maximum of 26 children branches. Hence time complexity will be, `O(2 * 26 * n)` i.e `O(n)`.
+- If we have no limitation on the `'.'` character for search, then the wild card characters can be as much as `n` then time complexity can go as high as , `O(n`<sup>`2`</sup>`)`
+---
+
+### []()
+
+#### Solution:
+
+-
+
+```python
+
+```
+- Time complexity, `O()`
+---
+
 ## Heap / Priority Queue
 
 ## Backtracking
