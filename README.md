@@ -1558,16 +1558,121 @@ class WordDictionary:
 - If we have no limitation on the `'.'` character for search, then the wild card characters can be as much as `n` then time complexity can go as high as , `O(n`<sup>`2`</sup>`)`
 ---
 
-### []()
+### [212. Word Search II](https://leetcode.com/problems/word-search-ii/description/)
+
+Given an `m x n` board of characters and a list of strings `words`, return all words on the board.
+
+Each word must be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.
+
 
 #### Solution:
 
--
+- In this of we look close, we can do **Brutforce** way to solve this, where we do DFS to check each `word` in `words` starting at every *index* `i,j` in the `board`. In this Brutforce solution, hence run time will be `O(m×n)×Time_to_DFS` => means, `(m×n×k)` where `k` i average length of `word` in `words`, `k` can range from `1 to m×n`.
+- To save Time we use **Trie** to do this in optimal manner.
+- We add all the `word` in `words` array to a **Trie** data structure.
+- Then we Iterate over all the places `board[i][j]` of the board. And we do DFS search at each index.
+- But instead of searching just one single word, we search over the entire Trie and try to find all the words that can be reached from that particular places `board[i][j]` of the board.
+- Then we eliminate those already found words in further search at other board places. 
 
 ```python
+# We create a TrieNode class that will be use to hold Trie Data Structure.
+class TrieNode:
+    def __init__(self):
+        self.children = {} # Dictionary for next character nodes. 
+        self.isWord = False # To keep trach of end of word node.
+        self.refs = 0 # Reference to track count of times a character node is referred.
+
+    # Just like regular add words to Trie
+    def addWord(self, word):
+        cur = self
+        cur.refs += 1 # When we add a character we increase its reference count
+        for c in word:
+            if c not in cur.children:
+                cur.children[c] = TrieNode()
+            cur = cur.children[c]
+            cur.refs += 1 # When we add a character we increase its reference count
+        cur.isWord = True
+
+    # Remove `word` is just reducing to reference count for each character of the word
+    def removeWord(self, word):
+        cur = self
+        cur.refs -= 1
+        for c in word:
+            if c in cur.children:
+                cur = cur.children[c]
+                cur.refs -= 1
+        cur.isWord = False
+```
+```python
+class Solution:
+    def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:
+
+        # Create a Trie and add all the words in it
+        root = TrieNode() 
+        for w in words:
+            root.addWord(w)
+        
+        ROWS, COLS = len(board), len(board[0])
+        # Created result and `visit` set to keep track of visited places of board while DFS
+        res, visit = set(), set() 
+
+        # Create the DFS Function, it takes input r, c as row and col of the board
+        # to start the DFS. Other input `node`, it is node in Trie from where we
+        # do DFS search and input `word` is prefix of word that has been traversed.
+        def dfs(r, c, node, word):
+            if ( # here we check if we can go further in DFS search
+                r not in range(ROWS) 
+                or c not in range(COLS)
+                or board[r][c] not in node.children
+                or node.children[board[r][c]].refs < 1
+                or (r, c) in visit
+            ):
+                return
+
+            # visit the position board[r][c] add it to prefix, `word`
+            visit.add((r, c))
+            node = node.children[board[r][c]]
+            word += board[r][c]
+
+            # if we find end of any word, we add it to result and remove it from Trie
+            if node.isWord:
+                node.isWord = False
+                res.add(word)
+                root.removeWord(word)
+
+            # do further DFS in all 4 directions,
+            dfs(r + 1, c, node, word)
+            dfs(r - 1, c, node, word)
+            dfs(r, c + 1, node, word)
+            dfs(r, c - 1, node, word)
+
+            # After all the DFS is done we remove the nodes from visited set, so that 
+            # we have all nodes unvisited when we do DFS starting at other `board` position.
+            # We put this as last statement of DFS so that it runs in the end, after all the
+            # recursive calls have been processed.
+            visit.remove((r, c))
+
+        # Call the dfs at each position of the board
+        for r in range(ROWS):
+            for c in range(COLS):
+                dfs(r, c, root, "")
+
+        return list(res)
 
 ```
-- Time complexity, `O()`
+- The time complexity of this code can be analyzed in parts:
+
+- **Trie Construction (root.addWord(w))**: For every word in `words`, adding a word to the Trie takes `O(K)` where `K` is the length of the word. Since there are `words` words, the time complexity for this step is `O(N×K)`, where `N` is the number of words in `words`.
+
+- **DFS Traversal**: The DFS (dfs function) is called on every cell of the board (of size `m×n`). In the worst case, DFS would visit every cell starting from each cell (so it would be `m×n×m×n`). But considering the TrieNode structure, the DFS will not explore paths not present in the Trie. The trie has a total of `N×K` nodes (or less). So, for each cell, we'll visit at most `O(N×K)` nodes in the trie. So, for all cells combined, it's `O(m×n×N×K)`.
+
+- Thus, the overall time complexity of the findWords function is: `O(m×n×N×K)` , where, 
+    - `m×n` is the size of the board.
+    - `N` is the number of words.
+    - `K` is the average length of a word.
+
+Note: This is a rough upper bound. **The real-world performance will be better due to early pruning when DFS paths don't exist in the Trie.**
+
 ---
 
 ## Heap / Priority Queue
