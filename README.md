@@ -236,7 +236,8 @@ def isPalindrome(self, s: str) -> bool:
         l += 1
         r -= 1
     return True
-
+```
+```python
 # Could write own alpha-numeric function
 def alphanum(self, c):
     return (
@@ -274,7 +275,8 @@ def threeSum(self, nums: List[int]) -> List[List[int]]:
         return []
     if nums[0] > 0:  # Base case 2
         return []
-
+```
+```python
     for i, x in enumerate(nums): # Traversing the array to fix the number.
         # If the fix number is +ve, stop, we can't make it zero by searching after it.
         if x > 0:
@@ -887,8 +889,8 @@ def mergeKLists(self, lists: List[ListNode]) -> ListNode:
             mergedLists.append(self.mergeList(l1, l2))
         lists = mergedLists
     return lists[0]
-
-
+```
+```python
 def mergeList(self, l1, l2):
     dummy = ListNode()
     tail = dummy
@@ -1391,7 +1393,8 @@ class Trie:
     # Initialize the root of Trie, it has 26 children to start a word using any character.
     def __init__(self):
         self.root = Node()
-
+```
+```python
     # Insert the word in the Trie
     def insert(self, word: str) -> None:
         curr = self.root 
@@ -1407,7 +1410,8 @@ class Trie:
         
         # Update the end character of word as `end = TRUE` denoting an end of perfect word
         curr.end = True
-
+```
+```python
     # search for a perfect word in Trie
     def search(self, word: str) -> bool:
         curr = self.root
@@ -1423,7 +1427,8 @@ class Trie:
         
         # if all character present, check if last character is end i.e `end = TRUE`
         return curr.end
-
+```
+```python
     # `startWith` function is just like search, without need to check for the `end = TRUE`
     def startsWith(self, prefix: str) -> bool:
         curr = self.root
@@ -1447,7 +1452,8 @@ class Trie:
 
     def __init__(self):
         self.trie = {}
-
+```
+```python
     def insert(self, word: str) -> None:
         t = self.trie
 		# The idea is to insert words in a linked fashion. For Ex "cars" 
@@ -1459,7 +1465,8 @@ class Trie:
 		# Another key named "end" will distinguish that the word  "cars" actually exists
 		# Without the end key it simply means that the traversed part is just prefix
         t["end"] = True 
-
+```
+```python
     def search(self, word: str) -> bool:
         t = self.trie
 		# Traverse through the word
@@ -1470,7 +1477,8 @@ class Trie:
             return False
 		# As the end key denotes the existence of the word
         return "end" in t
-
+```
+```python
     def startsWith(self, prefix: str) -> bool:
         t = self.trie
 		# Traverse through the word
@@ -1505,8 +1513,8 @@ class TrieNode:
     def __init__(self):
         self.children = {}  # a : TrieNode
         self.word = False
-
-
+```
+```python
 class WordDictionary:
     def __init__(self):
         self.root = TrieNode()
@@ -1519,7 +1527,8 @@ class WordDictionary:
                 cur.children[c] = TrieNode()
             cur = cur.children[c]
         cur.word = True
-
+```
+```python
     # Search `word` in the Trie
     def search(self, word: str) -> bool:
 
@@ -1615,7 +1624,8 @@ class Solution:
         ROWS, COLS = len(board), len(board[0])
         # Created result and `visit` set to keep track of visited places of board while DFS
         res, visit = set(), set() 
-
+```
+```python
         # Create the DFS Function, it takes input r, c as row and col of the board
         # to start the DFS. Other input `node`, it is node in Trie from where we
         # do DFS search and input `word` is prefix of word that has been traversed.
@@ -1651,7 +1661,8 @@ class Solution:
             # We put this as last statement of DFS so that it runs in the end, after all the
             # recursive calls have been processed.
             visit.remove((r, c))
-
+```
+```python
         # Call the dfs at each position of the board
         for r in range(ROWS):
             for c in range(COLS):
@@ -1677,6 +1688,65 @@ Note: This is a rough upper bound. **The real-world performance will be better d
 
 ## Heap / Priority Queue
 
+### [295. Find Median from Data Stream](https://leetcode.com/problems/find-median-from-data-stream/description/)
+
+The median is the middle value in an ordered integer list. If the size of the list is even, there is no middle value, and the median is the mean of the two middle values.
+ r = [2,3,4]`, the median is `3`.
+    For example, for `arr = [2,3]`, the median is `(2 + 3) / 2 = 2.5`.
+
+Implement the MedianFinder class:
+
+- `MedianFinder()` initializes the MedianFinder object.
+- `void addNum(int num) `adds the integer num from the data stream to the data structure.
+- `double findMedian()` returns the median of all elements so far. Answers within 10-5 of the actual answer will be accepted.
+
+
+#### Solution:
+
+- In this we maintain two heaps small and large which are max heap and min heap respectively.
+
+```python
+import heapq
+
+class MedianFinder:
+    def __init__(self):
+        # We will maintain two heaps:
+        # 1. small: A max heap for the smaller half of numbers.
+        #    To simulate a max heap, we negate numbers before inserting/retrieving.
+        # 2. large: A min heap for the larger half of numbers. (Python default)
+        self.small, self.large = [], []
+```
+```python
+    def addNum(self, num: int) -> None:
+        # Decide where to put the new number.
+        if self.large and num > self.large[0]:
+            heapq.heappush(self.large, num)
+        else:
+            heapq.heappush(self.small, -1 * num)
+
+        # Rebalance the heaps to ensure the difference in their sizes is not more than 1.
+        if len(self.small) > len(self.large) + 1:
+            val = -1 * heapq.heappop(self.small)
+            heapq.heappush(self.large, val)
+
+        if len(self.large) > len(self.small) + 1:
+            val = heapq.heappop(self.large)
+            heapq.heappush(self.small, -1 * val)
+```
+```python
+    def findMedian(self) -> float:
+        # If 'small' has more elements, the median is the largest element in 'small'.
+        if len(self.small) > len(self.large):
+            return -1 * self.small[0] 
+        # If 'large' has more elements, the median is the smallest element in 'large'.
+        elif len(self.large) > len(self.small):
+            return self.large[0]
+        # If the number of elements is equal in both heaps, the median is the average.
+        return (-1 * self.small[0] + self.large[0]) / 2.0
+
+```
+- Time complexity, `O(log n)` for both `addNum()` and `findMedian()` functions.
+  
 ## Backtracking
 
 ## Graphs
