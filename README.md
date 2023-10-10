@@ -1567,7 +1567,7 @@ class WordDictionary:
 - If we have no limitation on the `'.'` character for search, then the wild card characters can be as much as `n` then time complexity can go as high as , `O(n`<sup>`2`</sup>`)`
 ---
 
-### [212. Word Search II](https://leetcode.com/problems/word-search-ii/description/)
+### [212. Word Search II](https://leetcode.com/problems/word-search-ii/description/) <sup style="color:#FF2D55">Hard</sup>
 
 Given an `m x n` board of characters and a list of strings `words`, return all words on the board.
 
@@ -1688,7 +1688,7 @@ Note: This is a rough upper bound. **The real-world performance will be better d
 
 ## Heap / Priority Queue
 
-### [295. Find Median from Data Stream](https://leetcode.com/problems/find-median-from-data-stream/description/)
+### [295. Find Median from Data Stream](https://leetcode.com/problems/find-median-from-data-stream/description/) <sup style="color:#FF2D55">Hard</sup>
 
 The median is the middle value in an ordered integer list. If the size of the list is even, there is no middle value, and the median is the mean of the two middle values.
  r = [2,3,4]`, the median is `3`.
