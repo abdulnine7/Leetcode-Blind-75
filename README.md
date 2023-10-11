@@ -1749,7 +1749,321 @@ class MedianFinder:
   
 ## Backtracking
 
+### [39. Combination Sum](https://leetcode.com/problems/combination-sum/description/) <sup style="color:#FFB801">Medium</sup>
+
+Given an array of distinct integers `candidates` and a target integer `target`, return a list of all unique combinations of `candidates` where the chosen numbers sum to `target`. You may return the combinations in any order.
+
+The same number may be chosen from `candidates` an unlimited number of times. Two combinations are unique if the **frequency** of at least one of the chosen numbers is different.
+
+The test cases are generated such that the number of *unique combinations* that sum up to target is less than `150` combinations for the given input.
+
+#### Solution:
+
+- In this we do backtracking usng DFS search, here we maintain a combination `curr` until get get `total` equal to `target`. If we found such combination we add it to result `res`.
+
+```python
+def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
+    res = []
+
+    # Define a recursive DFS function.
+    # i: the current index in candidates to consider.
+    # cur: the current combination being built.
+    # total: the sum of the numbers in the current combination.
+    def dfs(i, cur, total):
+
+        if total == target:  # found a valid combination.
+            res.append(cur.copy())
+            return
+
+        if i >= len(candidates) or total > target:
+            return
+
+        cur.append(candidates[i])
+        # Recursively call the dfs function keeping 'i' same because we can reuse same number.
+        dfs(i, cur, total + candidates[i])
+
+        # After exploring with the current number, we remove it (backtrack).
+        cur.pop()
+
+        # Now, we skip the current candidate and move on to the next one.
+        dfs(i + 1, cur, total)
+
+    dfs(0, [], 0) # start DFS from 0th index, empty combination and `total = 0`
+
+    return res
+
+```
+- Given `n` as the number of candidates, in the worst case, each candidate can be chosen or not chosen (2 choices for each candidate). This results in 2<sup>n</sup> possible combinations. Thus, the time complexity is `O(2`<sup>`n`</sup>`)` in the worst-case scenario.
+---
+
+### [79. Word Search](https://leetcode.com/problems/word-search/description/) <sup style="color:#FFB801">Medium</sup>
+
+Given an `m x n` grid of characters `board` and a string `word`, return `true` if `word` exists in the grid.
+
+The word can be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once.
+
+#### Solution:
+
+- In this we run 4 directional DFS at each index location of the `board` to search for the word `word`.
+- In our DFS function we take input `r,c,i` for row, col and index of `word` to search from.
+- DFS to check if `word[i:]` i.e substring of `word` from `i` to `len(word)`, can be made starting for `r,c` index of the `board`.
+
+```python
+def exist(self, board: List[List[str]], word: str) -> bool:
+    ROWS, COLS = len(board), len(board[0]) # Get the imensions
+    path = set() # To track the visited locations
+```
+```python
+    def dfs(r, c, i):
+        # Base case: if the entire word is matched
+        if i == len(word):
+            return True
+
+        # Base case: if out of bounds, character mismatch or cell already visited
+        if (
+            min(r, c) < 0
+            or r >= ROWS
+            or c >= COLS
+            or word[i] != board[r][c]
+            or (r, c) in path
+        ):
+            return False
+
+        path.add((r, c)) # Mark the location as visited
+
+        # Explore in all 4 directions: down, up, right, and left
+        # If any direction return true that means we found a match
+        res = (
+            dfs(r + 1, c, i + 1)
+            or dfs(r - 1, c, i + 1)
+            or dfs(r, c + 1, i + 1)
+            or dfs(r, c - 1, i + 1)
+        )
+
+        path.remove((r, c)) # Backtrack: mark the cell as unvisited
+        return res
+```
+```python
+    # To prevent TLE,reverse the word if frequency of the first letter is more than the last letter's
+    count = defaultdict(int, sum(map(Counter, board), Counter())) # Count character frequencies
+
+    if count[word[0]] > count[word[-1]]:
+        word = word[::-1] # Reversed
+    
+    # Search at each location of board
+    for r in range(ROWS):
+        for c in range(COLS):
+            if dfs(r, c, 0):
+                return True
+    return False
+
+    # O(n * m * 4^n)
+
+```
+- Time complexity of the code is approximately `O(m×n×L)`, where `m×n` is the size of the board and `L` is the length of the word. 
+---
+
 ## Graphs
+
+### [200. Number of Islands](https://leetcode.com/problems/number-of-islands/description/) <sup style="color:#FFB801">Medium</sup>
+
+Given an` m x n` 2D binary grid grid which represents a map of `'1'`s (land) and `'0'`s (water), return the number of islands.
+
+An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
+
+#### Solution:
+
+- In this at each location of grid `i,j` if it is a land i.e `'1'` we change it and all its adjacent land to `'0'` and increase the count of islands by 1. 
+- Then we iterate forward and we if find any land again we repeat the process. Untill we changed all `'1'` to `'0'`.
+- Thus we will get number of inslands count in the variable `islands`.
+
+```python
+def numIslands(self, grid: List[List[str]]) -> int:
+    if not grid or not grid[0]:
+        return 0
+
+    rows, cols = len(grid), len(grid[0])
+    
+    def dfs(i, j):
+        # If out of bounds or not an island, return
+        if i < 0 or i >= rows or j < 0 or j >= cols or grid[i][j] == '0':
+            return
+        # Mark the land cell as visited
+        grid[i][j] = '0'
+        
+        # Visit all adjacent land cells
+        dfs(i + 1, j)
+        dfs(i - 1, j)
+        dfs(i, j + 1)
+        dfs(i, j - 1)
+
+    islands = 0
+    for i in range(rows):
+        for j in range(cols):
+            if grid[i][j] == '1':
+                islands += 1
+                dfs(i, j)
+
+    return islands
+
+```
+- Time complexity, `O(m×n)`. WE will visit each cell at max 2 times, one from the for loops and 1 time in the DFS. Hence worst case time will be 2×m×n i.e `O(m×n)`.
+---
+
+### [133. Clone Graph](https://leetcode.com/problems/clone-graph/description/) <sup style="color:#FFB801">Medium</sup>
+
+Given a reference of a node in a **connected** undirected graph.
+
+Return a **deep copy** (clone) of the graph.
+
+Each node in the graph contains a value (`int`) and a list (`List[Node]`) of its neighbors.
+
+```java
+class Node {
+    public int val;
+    public List<Node> neighbors;
+}
+```
+
+Test case format:
+
+For simplicity, each node's value is the same as the node's index (1-indexed). For example, the first node with `val == 1`, the second node with `val == 2`, and so on. The graph is represented in the test case using an adjacency list.
+
+An adjacency list is a collection of unordered lists used to represent a finite graph. Each list describes the set of neighbors of a node in the graph.
+
+The given node will always be the first node with `val = 1`. You must return the copy of the given node as a reference to the cloned graph.
+
+#### Solution:
+
+- In this we use, Depth First Search function to traverse and clone each node.
+- We also maintain the dictionary of cloned nodes `oldToNew`, so that if we come across already cloned node we dont clone them again.
+
+```python
+def cloneGraph(self, node: "Node") -> "Node":
+    # Dictionary to map original nodes to their respective clones
+    oldToNew = {}
+
+    def dfs(node):
+        # If the node is already cloned, return the cloned version
+        if node in oldToNew:
+            return oldToNew[node]
+
+        copy = Node(node.val) # Create new clone node.
+        oldToNew[node] = copy # Add to dictionary
+        
+        # For each neighboring node, recursively clone it and append
+        # to the neighbors of the current clone.
+        for x in node.neighbors:
+            copy.neighbors.append(dfs(x))
+
+        return copy
+
+    # Start the DFS from the given node, or return None if the node is null
+    return dfs(node) if node else None
+
+```
+- The time complexity is `O(N+E)`, where `N` is the number of nodes, and `E` is the number of edges/connections between them.
+---
+
+### [417. Pacific Atlantic Water Flow](https://leetcode.com/problems/pacific-atlantic-water-flow/description/) <sup style="color:#FFB801">Medium</sup>
+
+There is an `m x n` rectangular island that borders both the Pacific Ocean and Atlantic Ocean. The Pacific Ocean touches the island's left and top edges, and the Atlantic Ocean touches the island's right and bottom edges.
+
+The island is partitioned into a grid of square cells. You are given an `m x n` integer matrix `heights` where `heights[r][c]` represents the height above sea level of the cell at coordinate `(r, c)`.
+
+The island receives a lot of rain, and the rain water can flow to neighboring cells directly *north, south, east, and west* if the neighboring cell's height is less than or equal to the current cell's height. Water can flow from any cell adjacent to an ocean into the ocean.
+
+Return a **2D list** of grid coordinates result where `result[i] = [r`<sub>`i`</sub>`, c`<sub>`i`</sub>`]` denotes that rain water can flow from cell `(r`<sub>`i`</sub>`, c`<sub>`i`</sub>`)` to both the Pacific and Atlantic oceans.
+
+#### Solution:
+
+- In this we create 2 mxn arrays `pacific` and `atlantic` to keep track of cells that can drain to the Pacific and Atlantic.
+- Start a DFS from every cell on the Pacific's border (top and left borders) and mark all the cells that can be reached in the Pacific matrix.
+- Similarly, start a DFS from every cell on the Atlantic's border (right and bottom borders) and mark all the cells that can be reached in the Atlantic matrix.
+- Finally, return the union of pacific and atlantic arrays.
+
+```python
+def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
+    if not heights:
+        return []
+    
+    m, n = len(heights), len(heights[0])
+    pacific = [[0]*n for _ in range(m)]
+    atlantic = [[0]*n for _ in range(m)]
+
+    def dfs(r, c, visited, prev_height):
+
+        # If out of bounds, already visited, or current height is smaller than previous
+        if (
+            r < 0 or r >= m 
+            or c < 0 or c >= n 
+            or visited[r][c] == 1 
+            or heights[r][c] < prev_height
+        ):
+            return
+        
+        # Mark the current cell as visited
+        visited[r][c] = 1 
+
+        # Explore the neighboring cells
+        for x, y in [(r-1, c), (r+1, c), (r, c-1), (r, c+1)]:
+            dfs(x, y, visited, heights[r][c])
+    
+    for i in range(m):
+        dfs(i, 0, pacific, heights[i][0]) # Pacific Left Border
+        dfs(i, n-1, atlantic, heights[i][n-1]) # Atlantic Right Border
+    
+    for i in range(n):
+        dfs(0, i, pacific, heights[0][i]) # Pacific Top Border
+        dfs(m-1, i, atlantic, heights[m-1][i]) # Atlantic Bottom Border
+    
+    res = []
+    for i in range(m):
+        for j in range(n):
+            if pacific[i][j] == 1 and atlantic[i][j] == 1:
+                res.append([i,j])
+        
+    return res
+
+```
+- Time complexity, `O(m×n)`
+---
+
+### []()
+
+#### Solution:
+
+-
+
+```python
+
+```
+- Time complexity, `O()`
+---
+
+### []()
+
+#### Solution:
+
+-
+
+```python
+
+```
+- Time complexity, `O()`
+---
+
+### []()
+
+#### Solution:
+
+-
+
+```python
+
+```
+- Time complexity, `O()`
+---
 
 ## Advanced Graphs
 
