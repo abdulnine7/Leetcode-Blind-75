@@ -2029,40 +2029,162 @@ def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
 - Time complexity, `O(m×n)`
 ---
 
-### []()
+### [207. Course Schedule](https://leetcode.com/problems/course-schedule/description/) <sup style="color:#FFB801">Medium</sup>
+
+There are a total of numCourses courses you have to take, labeled from `0` to `numCourses - 1`. You are given an array `prerequisites` where `prerequisites[i] = [a`<sub>`i`</sub>`, b`<sub>`i`</sub>`]` indicates that you must take course `b`<sub>`i`</sub> first if you want to take course `a`<sub>`i`</sub> .
+
+For example, the pair `[0, 1]`, indicates that to take course `0` you have to first take course `1`.
+
+Return `true` if you can finish all courses. Otherwise, return `false`.
 
 #### Solution:
 
--
+- This problem can be solved using a **Topological Sort**. The idea is to represent the courses and their prerequisites as a directed graph. A cycle in this graph indicates that it's impossible to finish all courses, because there's a circular dependency between courses.
+- To check if a cycle exists in the graph, we can use depth-first search (DFS). If we encounter a node that is already being visited it means there's a cycle, and we can't finish all courses.
+- In DFS we will use `visited[i] = -1` when the node is being visited i.e it is kept on hold for another course to be finished as it has prerequisite courses that is not visited(finished) yet.
+- And we will use `visited[i] = 1` when certain course is visited i.e all its prerequisite can be done so it can be done too.
 
 ```python
+def canFinish(numCourses, prerequisites):
+    graph = [[] for _ in range(numCourses)]
+    visited = [0 for _ in range(numCourses)]
+
+    # create graph
+    for pair in prerequisites:
+        x, y = pair
+        graph[x].append(y)
+
+    # return True if there's a cycle
+    def dfs(i):
+
+        # if ith node is marked as being visited, then a cycle is found
+        if visited[i] == -1:
+            return True
+
+        # if it is done visited, then do not visit again
+        if visited[i] == 1:
+            return False
+
+        # mark as being visited
+        visited[i] = -1
+
+        # visit all the neighbors
+        for j in graph[i]:
+            if dfs(j):
+                return True
+                
+        # after visiting all the neighbors of i, mark it to be done visited
+        visited[i] = 1
+        return False
+
+    for i in range(numCourses):
+        if dfs(i):
+            return False
+    return True
 
 ```
-- Time complexity, `O()`
+- Time complexity, `O(n)` where `n` is Number of courses. we visit each course once. 
 ---
 
-### []()
+### [323 · Number of Connected Components in an Undirected Graph](https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/) <sup style="color:#FFB801">Medium</sup>
+
+In this problem, there is an undirected graph with `n` nodes. There is also an edges array. Where `edges[i] = [a, b]` means that there is an edge between node `a` and node `b` in the graph.
+
+You need to *return* the number of connected components in that graph.
+
+Example: A graph with 10 nodes and 6 edges.
+
+<img src="https://media.geeksforgeeks.org/wp-content/uploads/20200421201526/Graph-Connected-Example-1-300x98.png">\
+Connected Components: **`4`**
+
 
 #### Solution:
 
--
+- We first construct the graph using an adjacency list. 
+- We maintain a visited list to keep track of nodes we've already explored.
+- For each unvisited node, we initiate a DFS to explore its entire component and mark all nodes in that component as visited. We also increment the components count for each unvisited node (i.e., for each new component).
 
 ```python
+def countComponents(n, edges):
+    # Create an adjacency list to represent the graph
+    graph = [[] for _ in range(n)]
+    for edge in edges:
+        a, b = edge
+        graph[a].append(b)
+        graph[b].append(a)
+
+    visited = [False] * n
+
+    # DFS function
+    def dfs(i):
+        if visited[i]:
+            return
+        visited[i] = True
+        for neighbor in graph[i]:
+            dfs(neighbor)
+
+    # Check if any node is unvisited, visit it and all its connected components
+    # and mark them visited, increment the counter.
+    components = 0
+    for i in range(n):
+        if not visited[i]:
+            components += 1
+            dfs(i)
+
+    return components
 
 ```
-- Time complexity, `O()`
+- Time complexity, `O(n)` to visit all the nodes.
 ---
 
-### []()
+### [261 · Graph Valid Tree](https://leetcode.com/problems/graph-valid-tree/) <sup style="color:#FFB801">Medium</sup>
+
+Given `n` nodes labeled from `0` to` n - 1` and a list of `undirected` edges (each edge is a pair of nodes), write a function to check whether these edges make up a valid tree.
 
 #### Solution:
 
--
+- By Definition of Valid Tree:
+    - The graph must be connected: there must be a path between every pair of vertices.
+    - The graph must not contain any cycles.
+
+**Using approach: Union-Find (or Disjoint Set Union - DSU)**
+- If the graph is a tree, it must have exactly `n - 1` edges. If not, return False immediately.
+
+- The `find` function finds the root of the set that element `x` belongs to. This is done using a very common union-find algorithm.
+
+- The `union` function merges the disjoint sets that elements `x` and `y` belong to. It returns `True` if `x` and `y` were in different sets (and hence no cycle was introduced by adding the edge `(x, y)`), and `False` if `x` and `y` were already in the same set.
+
+- `all(map(union, edges))` returns `True` if all edges connect nodes in different sets (and hence no cycles are introduced), and `False` otherwise.
 
 ```python
+def valid_tree(n, edges):
+    if len(edges) != n - 1: # Check edge count
+        return False
+    
+    # Initialize the parent list for union-find.
+    # Initially, every node is its own parent.
+    parent = list(range(n)) 
+    
+    # Find the root of the set that node x belongs to.
+    # If a node's parent is itself, it's the root. Otherwise, recursively find the root.
+    def find(x):
+        return x if parent[x] == x else find(parent[x])
+    
+    # Join two sets together and return whether they were previously separate.
+    # The union function combines the sets that contain nodes x and y.
+    # It returns True if they were separate (no cycle introduced), 
+    # False if they were already in the same set.
+    def union(edge):
+        x, y = map(find, edge)  # Find the roots for nodes in the edge
+        parent[x] = y           # Make y the parent of x
+        return x != y           # True if x and y had different roots, means no cycle
+    
+    # Check if all edges connect nodes that were previously not connected.
+    # If any edge connects nodes in the same set, a cycle is introduced and it's not a tree.
+    return all(map(union, edges))
 
 ```
-- Time complexity, `O()`
+- Time Complexity: `O(N + E)`, where `N` is the number of nodes and `E` is the number of edges, as each union/find operation takes `O(1)` time.
 ---
 
 ## Advanced Graphs
