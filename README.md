@@ -2086,6 +2086,61 @@ def canFinish(numCourses, prerequisites):
 - Time complexity, `O(n)` where `n` is Number of courses. we visit each course once. 
 ---
 
+### Topological Sort:
+
+    Topological Sort is an algorithm used to linearly order the vertices of a directed acyclic graph (DAG) in such a way that for every directed edge `(u, v)`, vertex `u` comes before vertex `v` in the ordering.
+
+    It's essential to note that Topological Sort is only applicable for DAGs.
+
+Examples:
+- **Dependency Resolution**: Scenarios where certain tasks have to be executed in a particular order, and some tasks depend on the completion of other tasks. (Build/Execution Order)
+- **Course Scheduling**: Given a set of courses and their prerequisites, determine an order to take the courses.
+- **Advanced algorithms**: Some algorithms, especially on graphs, use Topological Sort as a subroutine.
+
+**Topological Sort Algorithm:**
+1. Choose a node that has no incoming edges (i.e., its in-degree is 0).
+2. Remove the node and all outgoing edges from it.
+3. Add the node to the topological ordering.
+4. Repeat steps 1-3 until no nodes remain.
+
+**Topological Sort Algorithm using DFS:**
+1. Create an empty stack and a visited set.
+2. For every vertex v in the graph:
+    - If v is not visited:\
+        a. Call the DFS helper function starting from vertex v, marking nodes as visited along the way, and pushing nodes to the stack when they have no unvisited neighbors.
+3. Pop nodes from the stack; this gives the topological ordering.
+
+**Pseudo-Code:**
+```javascript
+function topologicalSort(graph):
+    stack = empty stack
+    visited = empty set
+
+    for each vertex v in graph:
+        if v not in visited:
+            dfs(v, visited, stack)
+
+    while stack is not empty:
+        print(stack.pop())
+
+function dfs(v, visited, stack):
+    visited.add(v)
+
+    for each neighbor u of v:
+        if u not in visited:
+            dfs(u, visited, stack)
+
+    # push `v` to stack, when all its neighbors are visited in above for loop
+    stack.push(v) 
+
+```
+Eg:\
+<img src="https://media.geeksforgeeks.org/wp-content/cdn-uploads/graph.png" width="200px">\
+Will Have Topological Sort: `stack = [4,5,0,2,3,1]` (according to above algorithm)\
+Note, There can be more than one topological sorting for a graph.
+
+---
+
 ### [323 · Number of Connected Components in an Undirected Graph](https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/) <sup style="color:#FFB801">Medium</sup>
 
 In this problem, there is an undirected graph with `n` nodes. There is also an edges array. Where `edges[i] = [a, b]` means that there is an edge between node `a` and node `b` in the graph.
@@ -2188,6 +2243,20 @@ def valid_tree(n, edges):
 ---
 
 ## Advanced Graphs
+
+### [269 · Alien Dictionary](https://leetcode.com/problems/alien-dictionary/)
+
+There is a new alien language which uses the latin alphabet. However, the order among letters are unknown to you. You receive a list of **non-empty** words from the dictionary, where words are **sorted lexicographically by the rules of this new language**. Derive the order of letters in this language.
+
+#### Solution:
+
+-
+
+```python
+
+```
+- Time complexity, `O()`
+---
 
 ## 1-D Dynamic Programming
 
