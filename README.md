@@ -2244,21 +2244,388 @@ def valid_tree(n, edges):
 
 ## Advanced Graphs
 
-### [269 · Alien Dictionary](https://leetcode.com/problems/alien-dictionary/)
+### [269 · Alien Dictionary](https://leetcode.com/problems/alien-dictionary/) <sup style="color:#FF2D55">Hard</sup>
 
 There is a new alien language which uses the latin alphabet. However, the order among letters are unknown to you. You receive a list of **non-empty** words from the dictionary, where words are **sorted lexicographically by the rules of this new language**. Derive the order of letters in this language.
 
-#### Solution:
-
--
-
-```python
-
-```
-- Time complexity, `O()`
 ---
 
 ## 1-D Dynamic Programming
+
+### [70. Climbing Stairs](https://leetcode.com/problems/climbing-stairs/description/) <sup style="color:#2DB55D">Easy</sup>
+
+You are climbing a staircase. It takes `n` steps to reach the top.
+
+Each time you can either climb `1` or `2` steps. In how many distinct ways can you climb to the top?
+
+#### Solution:
+- At every step `n` we are either coming from (n-1)<sup>th</sup> or (n-2)<sup>th</sup> step. Hence,
+- Number of ways to climb `n` steps is equal to, sum of number of ways to climb `n-1` steps and `n-2` steps. i.e, `climb(n) = climb(n-1) + climb(n-2)`
+```python
+# Botton Up approach non recursive:
+def climbStairs(self, n: int) -> int:
+    if n <= 3:
+        return n
+    n1, n2 = 2, 3
+
+    for i in range(4, n + 1):
+        temp = n1 + n2
+        n1 = n2
+        n2 = temp
+    return n2
+```
+
+```python
+# Top Down approach recursive:
+def climbStairs(self, n: int, memo={}) -> int:
+    if n <= 1:
+        return 1
+    if n == 2:
+        return 2
+
+    if n in memo:
+        return memo[n]
+
+    memo[n] = self.climbStairs(n-1, memo) + self.climbStairs(n-2, memo)
+    return memo[n]
+```
+- Time complexity, `O(n)` to visit each stair step.
+---
+
+### [198. House Robber](https://leetcode.com/problems/house-robber/description/) <sup style="color:#FFB801">Medium</sup>
+
+You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed, the only constraint stopping you from robbing each of them is that adjacent houses have security systems connected and it will automatically contact the police if two adjacent houses were broken into on the same night.
+
+Given an integer array `nums` representing the amount of money of each house, *return the maximum amount of money you can rob* tonight **without alerting the police**.
+
+#### Solution:
+
+- This is similar to above, At every `n`<sup>`th`</sup> house we check if robbing `n`<sup>`th`</sup> house is better or robbing `n-1`<sup>`th`</sup>.
+
+```python
+# Bottom Up Approach
+def rob(self, nums: List[int]) -> int:
+    rob1, rob2 = 0, 0
+
+    for n in nums:
+        temp = max(n + rob1, rob2)
+        rob1 = rob2
+        rob2 = temp
+    return rob2
+```
+```python
+# Top Down Approach
+def rob(self, nums: List[int]) -> int:
+    memo = [-1] * len(nums)
+    return self.helper(nums, len(nums) - 1, memo)
+
+def helper(self, nums, i, memo):
+    if i < 0:
+        return 0
+    if memo[i] >= 0:
+        return memo[i]
+
+    # Either rob the current house and skip the next one, or skip the current house
+    memo[i] = max(self.helper(nums, i - 2, memo) + nums[i], self.helper(nums, i - 1, memo))
+
+    return memo[i]
+```
+- Time complexity, `O(n)` for visiting all the houses.
+---
+
+### [198. House Robber II](https://leetcode.com/problems/house-robber-ii/description/) <sup style="color:#FFB801">Medium</sup>
+
+You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed. **All houses at this place are arranged in a circle.** That means the first house is the neighbor of the last one. Meanwhile, adjacent houses have a security system connected, and it will automatically contact the police if two adjacent houses were broken into on the same night.
+
+Given an integer array `nums` representing the amount of money of each house, return *the maximum amount of money* you can rob tonight without alerting the police.
+
+#### Solution:
+
+- This is same as above, but the difference is we can either rob house `1`<sup>`st`</sup> or last house `n`<sup>`th`</sup>. We just cannot rob both house `1`<sup>`st`</sup> and `n`<sup>`th`</sup>.
+- So we use the above same function to rob `1 to n-1` houses or `2 to n` houses. And take max.
+
+```python
+# Bottom Up Approach
+def rob(self, nums: List[int]) -> int:
+    # num[0] in case, we have only 1 house
+    return max(nums[0], self.helper(nums[1:]), self.helper(nums[:-1]))
+
+# Same function as above, 198. House Robber I
+def helper(self, nums):
+    rob1, rob2 = 0, 0
+
+    for n in nums:
+        newRob = max(rob1 + n, rob2)
+        rob1 = rob2
+        rob2 = newRob
+    return rob2
+
+```
+- Time complexity, `O(n)`
+---
+
+### [5. Longest Palindromic Substring](https://leetcode.com/problems/longest-palindromic-substring/description/) <sup style="color:#FFB801">Medium</sup>
+
+Given a string `s`, return the **longest palindromic substring** in `s`.
+
+#### Solution:
+
+- We visit each character and assume that it is a centre of a palindrome. 
+- And then we try to expand outward from it and find how many characters exist in that palindrome.
+
+```python
+def longestPalindrome(self, s: str) -> str:
+    result = ""
+
+    for i in range(len(s)):
+        # 1. Odd length palindrome: taking the character itself as center (i, i).
+        # 2. Even length palindrome: taking the character and next as center (i, i+1).
+        for l, r in ((i,i), (i,i+1)):
+
+            while l >= 0 and r < len(s) and s[l] == s[r]:
+                # If the len of the current palindrome (r-l+1) is greater than longest so far:
+                if (r - l + 1) > len(result):
+                    result = s[l:r + 1]
+
+                # Expand outwards l-1 and r+1
+                l -= 1
+                r += 1
+
+    return result
+
+```
+- Time complexity, `O(n`<sup>`2`</sup>`)`
+---
+
+### [647. Palindromic Substrings](https://leetcode.com/problems/palindromic-substrings/description/) <sup style="color:#FFB801">Medium</sup>
+
+Given a string `s`, return the number of palindromic substrings in it.
+
+A string is a palindrome when it reads the same backward as forward.
+
+
+#### Solution:
+
+- We iterate over each character of the string, and cound all the palindrome that are starting at that character location.
+
+```python
+def countSubstrings(self, s: str) -> int:
+    res = 0 
+
+    for i in range(len(s)):
+        # For odd-length and for even length palindromic substrings
+        res += self.countPali(s, i, i)
+        res += self.countPali(s, i, i + 1)
+
+    return res 
+
+# This helper function return count of all the palindrome substring that are starting at l, r
+def countPali(self, s, l, r):
+    res = 0  
+
+    while l >= 0 and r < len(s) and s[l] == s[r]:
+         # Everytime we find a matching character while expanding we,
+         # Increment the count of palindromic substrings for this center.
+        res += 1 
+        
+        # Expand outwards.
+        l -= 1
+        r += 1
+
+    return res
+```
+- Time complexity, `O(n`<sup>`2`</sup>`)`
+---
+
+### [91. Decode Ways](https://leetcode.com/problems/decode-ways/description/) <sup style="color:#FFB801">Medium</sup>
+
+A message containing letters from A-Z can be encoded into numbers using the following mapping:
+
+`'A' -> "1"`\
+`'B' -> "2"`\
+`...`\
+`'Z' -> "26"`
+
+To decode an encoded message, all the digits must be grouped then mapped back into letters using the reverse of the mapping above (there may be multiple ways). For example, "11106" can be mapped into:
+
+`"AAJF"` with the grouping `(1 1 10 6)`\
+`"KJF"` with the grouping `(11 10 6)`
+
+Note that the grouping `(1 11 06)` is invalid because `"06"` cannot be mapped into `'F'` since `"6"` is different from `"06"`.
+
+Given a string `s` containing only digits, return the **number of ways to decode** it.
+
+#### Solution:
+
+- In this we use Top Down Approach, We use recursion to fill the `dp` array from end to start.
+- We set the dp['n'] as 1, as there's one way to decode an empty string.
+ 
+```python
+def numDecodings(self, s: str) -> int:
+    dp = {len(s): 1}
+
+    # This function compute number of decodings for a substring starting from index i
+    def dfs(i):
+        if i in dp:
+            return dp[i]
+
+        # If the character is "0", it can't be decoded to any letter
+        if s[i] == "0":
+            dp[i] = 0
+            return 0
+
+        # Step 1: Try decoding just this one character
+        res = dfs(i + 1)
+
+        # Step 2: If the next 2 chars form a valid encoding (i.e. 10 to 26)
+        if i + 1 < len(s) and (s[i] == "1" or (s[i] == "2" and s[i + 1] in "0123456")):
+            res += dfs(i + 2)
+        
+        dp[i] = res # Update DP array
+        return dp[i]
+
+    return dfs(0)
+```
+- Time complexity, `O(n)` where we have `n` characters in input string.
+---
+
+### [322. Coin Change](https://leetcode.com/problems/coin-change/description/) <sup style="color:#FFB801">Medium</sup>
+
+You are given an integer array `coins` representing coins of different denominations and an integer `amount` representing a total amount of money.
+
+Return the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return `-1`.
+
+You may assume that you have an infinite number of each kind of coin.
+-
+#### Solution:
+
+- Initialize an array `dp` where `dp[i]` represents the minimum number of coins required to make up the amount i.
+- We initialize it with `amount + 1` because that's the maximum number of coins we could possibly need (in case we use only 1-value coins).
+- If at the end we have `dp[amount] = amount + 1` that means it is not possible to make the `amount` using the given `coins`.
+
+```python
+# Bottom Up Approach
+def coinChange(self, coins: List[int], amount: int) -> int:
+
+    dp = [amount + 1] * (amount + 1)
+    dp[0] = 0 # Base case
+
+    for a in range(1, amount + 1):
+
+        for c in coins:
+            if a - c >= 0:
+                dp[a] = min(dp[a], 1 + dp[a - c]) # If we use coin 'c' we update dp array
+
+    return dp[amount] if dp[amount] != amount + 1 else -1
+```
+- Time complexity, `O(amount)`
+---
+
+### [152. Maximum Product Subarray](https://leetcode.com/problems/maximum-product-subarray/description/) <sup style="color:#FFB801">Medium</sup>
+
+Given an integer array `nums`, find a subarray that has the largest product, and return the product.
+
+#### Solution:
+
+- We use `curMax` and `curMin` to store the minimum and maximum product of the subarray that ends at the current position.
+
+- While going thru each number `n` in `nums`, we Update `curMax` - it could be the current number, or the product of the current number and the previous max or min (because if `n` is negative, multiplying it with a previous minimum might give a maximum product).
+
+- We also Update `curMin` for similar reasons as `curMax`.
+
+```python
+def maxProduct(self, nums: List[int]) -> int:
+    res = nums[0]
+    curMin, curMax = 1, 1
+
+    for n in nums:
+
+        tmp = n * curMax # holding in tmp as we will change curMax in next step
+
+        curMax = max(n * curMax, n * curMin, n)
+
+        curMin = min(tmp, n * curMin, n)
+
+        # Update the result if necessary.
+        res = max(res, curMax)
+
+    return res
+```
+- Time complexity, `O(n)`
+---
+
+### [139. Word Break](https://leetcode.com/problems/word-break/description/) <sup style="color:#FFB801">Medium</sup>
+
+Given a string `s` and a dictionary of strings `wordDict`, return `true` if `s` can be segmented into a space-separated sequence of one or more dictionary words.
+
+Note that the same word in the dictionary may be reused multiple times in the segmentation.
+
+#### Solution:
+
+- To solve, we Create a dynamic programming list initialized with False values.
+- `dp[i]` represents whether the substring `s[i:]` can be segmented into words from `wordDict`.
+
+```python
+def wordBreak(self, s: str, wordDict: List[str]) -> bool:
+
+    dp = [False] * (len(s) + 1)   # Initialize dp array
+    dp[len(s)] = True             # Base case: An empty string can always be segmented.
+
+    # Start from the end of the string and move towards the start.
+    for i in range(len(s) - 1, -1, -1):
+
+        # For each index 'i', check every word in the dictionary.
+        for w in wordDict:
+
+            # if current word 'w' can be a prefix from the position 'i' of the string.
+            if (i + len(w)) <= len(s) and s[i : i + len(w)] == w:
+                dp[i] = dp[i + len(w)]
+            
+            # If dp[i] is True (meaning we found a valid segmentation), 
+            # we can break early and move to the next position.
+            if dp[i]:
+                break
+
+    return dp[0]
+
+```
+- Time complexity of the provided wordBreak code is `O(n×m×l)`, \
+where:\
+`n` is the length of the input string `s`.\
+`m` is the number of words in the `wordDict`.\
+`l` is the average length of the words in `wordDict`.
+---
+
+### [300. Longest Increasing Subsequence](https://leetcode.com/problems/longest-increasing-subsequence/description/) <sup style="color:#FFB801">Medium</sup>
+
+Given an integer array `nums`, return the length of the longest *strictly increasing subsequence*.
+
+#### Solution:
+
+- We follow Bottom Up approach to solve this.
+- We Initialize a list named LIS where each value represents the length of the longest increasing subsequence ending at that index. Initially, every number is its own increasing subsequence, so we start with 1s.
+
+```python
+def lengthOfLIS(self, nums: List[int]) -> int:
+    LIS = [1] * len(nums) #Initialization
+
+    # Iterating from the end of the list to the beginning.
+    for i in range(len(nums) - 1, -1, -1):
+
+        # For each number, iterate over the numbers that come after it.
+        for j in range(i + 1, len(nums)):
+
+            # If the current number at `i` is less than later number at `j`,
+            # it means we can extend the increasing subsequence.
+            if nums[i] < nums[j]:
+                LIS[i] = max(LIS[i], 1 + LIS[j])
+
+    return max(LIS)
+
+```
+- Time complexity, `O(n`<sup>`2`</sup>`)`
+---
+
 
 ## 2-D Dynamic Programming
 
