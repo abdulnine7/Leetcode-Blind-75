@@ -2629,7 +2629,7 @@ def lengthOfLIS(self, nums: List[int]) -> int:
 
 ## 2-D Dynamic Programming
 
-### [62. Unique Paths](https://leetcode.com/problems/unique-paths/description/)
+### [62. Unique Paths](https://leetcode.com/problems/unique-paths/description/) <sup style="color:#FFB801">Medium</sup>
 
 There is a robot on an `m x n` grid. The robot is initially located at the top-left corner (i.e., `grid[0][0]`). The robot tries to move to the bottom-right corner (i.e., `grid[m - 1][n - 1]`). The robot *can only move either down or right* at any point in time.
 
@@ -2657,7 +2657,7 @@ def uniquePaths(self, m: int, n: int) -> int:
 - Time complexity, `O(m x n)`
 ---
 
-### [1143. Longest Common Subsequence](https://leetcode.com/problems/longest-common-subsequence/description/)
+### [1143. Longest Common Subsequence](https://leetcode.com/problems/longest-common-subsequence/description/) <sup style="color:#FFB801">Medium</sup>
 
 Given two strings `text1` and `text2`, return the *length of their longest common subsequence*. If there is no common subsequence, return `0`.
 
@@ -2699,7 +2699,7 @@ def longestCommonSubsequence(self, text1: str, text2: str) -> int:
 
 ## Greedy
 
-### [53. Maximum Subarray](https://leetcode.com/problems/maximum-subarray/description/)
+### [53. Maximum Subarray](https://leetcode.com/problems/maximum-subarray/description/) <sup style="color:#FFB801">Medium</sup>
 
 Given an integer array `nums`, **find the subarray with the largest sum**, and return its sum.
 
@@ -2726,7 +2726,7 @@ def maxSubArray(self, nums: List[int]) -> int:
 - Time complexity, `O(n)`
 ---
 
-### [55. Jump Game](https://leetcode.com/problems/jump-game/description/)
+### [55. Jump Game](https://leetcode.com/problems/jump-game/description/) <sup style="color:#FFB801">Medium</sup>
 
 You are given an integer array `nums`. You are initially positioned at the array's **first index**, and each element in the array represents your maximum jump length at that position.
 
@@ -2756,6 +2756,175 @@ def canJump(self, nums: List[int]) -> bool:
 ---
 
 ## Intervals
+
+### [57. Insert Interval](https://leetcode.com/problems/insert-interval/description/) <sup style="color:#FFB801">Medium</sup>
+
+You are given an array of non-overlapping intervals intervals where `intervals[i] = [start`<sub>`i`</sub>`, end`<sub>`i`</sub>`]` represent the start and the end of the `i`<sup>`th`</sup> interval and intervals is sorted in ascending order by `start`<sub>`i`</sub>. You are also given an interval `newInterval = [start, end]` that represents the start and end of another interval.
+
+Insert `newInterval` into `intervals` such that `intervals` is still sorted in ascending order by `start`<sub>`i`</sub> and `intervals` still does not have any overlapping intervals (merge overlapping intervals if necessary).
+
+Return `intervals` after the insertion.
+
+#### Solution:
+
+- In this we iterate over intervals and add all the intervals before the new interval to array.
+- Once we come across overlapping intervals with new Intervals, we merge them into new Interval.
+- Later once we come across intervals that are after the new interval we add our new interval and all the remaining intervals to result array and return it.
+
+```python
+def insert(intervals, newInterval):
+    result = []
+    
+    for interval in intervals:
+        # if the new interval is before the current interval
+        if newInterval[1] < interval[0]:
+            result.append(newInterval)
+            return result + intervals[i:]
+
+        # if the new interval is after the current interval
+        elif newInterval[0] > interval[1]:
+            result.append(interval)
+
+        # overlapping intervals, merge them
+        else:
+            newInterval[0] = min(newInterval[0], interval[0])
+            newInterval[1] = max(newInterval[1], interval[1])
+
+    # append the last if merged `newInterval` is gonna be after all the intervals
+    result.append(newInterval)
+    
+    return result
+
+```
+- Time complexity, `O(n)` where `n` is number of interval in `intervals`.
+---
+
+### [56. Merge Intervals](https://leetcode.com/problems/merge-intervals/description/) <sup style="color:#FFB801">Medium</sup>
+
+Given an array of intervals where `intervals[i] = [start`<sub>`i`</sub>`, end`<sub>`i`</sub>`]`, **merge all overlapping intervals**, and return *an array of the non-overlapping intervals that cover all the intervals in the input*.
+
+#### Solution:
+
+- To solve this, we first sort the intervals, then we iterate over the sorted intervals and add them to result.
+- If we come across a **interval whose start is less than last interval's end** we merge it into the last interval.
+
+```python
+def merge(self, intervals: List[List[int]]) -> List[List[int]]:
+    intervals.sort(key=lambda pair: pair[0])    # sort the intervals
+    result = [intervals[0]]                     # Add first interval to result
+
+    for start, end in intervals:
+        lastEnd = result[-1][1]         # Last added interval's end
+
+        if start <= lastEnd:
+            # merge
+            result[-1][1] = max(lastEnd, end)
+
+        else:
+            result.append([start, end])
+
+    return result
+```
+- Time complexity, `O(n)`
+---
+
+### [435. Non-overlapping Intervals](https://leetcode.com/problems/non-overlapping-intervals/description/) <sup style="color:#FFB801">Medium</sup>
+
+Given an array of intervals `intervals` where `intervals[i] = [start`<sub>`i`</sub>`, end`<sub>`i`</sub>`]`, return *the minimum number of intervals you need to remove to make the rest of the intervals non-overlapping*.
+
+#### Solution:
+
+- This is just like the above one, instead of merging the intervals we add it to counter as it should be removed.
+
+```python
+def eraseOverlapIntervals(self, intervals: List[List[int]]) -> int:
+    intervals.sort(key=lambda pair: pair[0])    # sort the intervals
+    count = 0                                   # counter of intervals to remove
+    prevEnd = intervals[0][1]                   # previous interval end
+
+    # Start iterating from the second interval
+    for start, end in intervals[1:]:
+
+        if start < prevEnd:
+            # Increment the counter as this interval needs to be removed
+            count += 1
+        else:
+            # Update the end of the previous interval if there is no overlap
+            prevEnd = end
+
+    return count
+
+```
+- Time complexity, `O(n)`
+---
+
+### [252 · Meeting Rooms](https://www.lintcode.com/problem/920/) <sup style="color:#2DB55D">Easy</sup>
+
+Given an array of meeting time intervals consisting of start and end times `[[s1,e1],[s2,e2],...] (si < ei)`, determine if a person could attend all meetings.
+
+The imtervals are of form, class objects of the below class,
+```python
+class Interval(object):
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
+```
+
+
+#### Solution:
+
+- This is also like above 2 problems, here if we come acorss any overlappinng intervals we return `False`.
+- Since we have intervals as object of class, we sort the array first by `start` and then by `end` using `lambda` function like below.
+
+```python
+   def canAttendMeetings(self, intervals):
+        # Sorting using 2 keys, first by start and then by end
+        intervals.sort(key=lambda interval: (interval.start, interval.end))
+
+        for i in range(1, len(intervals)):
+            # if previous meeting has not ended before current one start
+            if intervals[i - 1].end > intervals[i].start:
+                return False
+                
+        return True
+```
+- Time complexity, `O(n)`
+---
+
+### [253 · Meeting Rooms II](https://www.lintcode.com/problem/919/) <sup style="color:#FFB801">Medium</sup>
+
+Given an array of meeting time intervals consisting of start and end times `[[s1,e1],[s2,e2],...] (si < ei)`, *find the minimum number of conference rooms required*.)
+
+#### Solution:
+
+- In thhi we add start a end to one single time stream and sort it to track starting and ending of meetings.
+- For example, if we have `intervals = [(0,30),(5,10),(15,20)]`
+    - After `time.sort(...)` we will have,
+    - `time = [(0, 1), (5, 1), (10, -1), (15, 1), (20, -1), (30, -1)]`
+    - So now we can iterate over `time` and keep track of how many meetings are starting and how many are ending.
+
+```python
+def minMeetingRooms(self, intervals: List[List[int]]) -> int:
+    time = []
+    for start, end in intervals:
+        time.append((start, 1))         # +1 indicates a meeting starts
+        time.append((end, -1))          # -1 indicates a meeting ends
+    
+    # Sort time points.
+    # If two time points are the same, end times (-1) will come before start times (+1)
+    time.sort(key=lambda x: (x[0], x[1]))
+    
+    count = 0                           # track of ongoing meeting
+    max_count = 0                       # track of max concurrent meetings
+
+    for t in time:
+        count += t[1]                   # Add +1 or -1 based on start or end
+        max_count = max(max_count, count)
+    return max_count
+
+```
+- Time complexity, `O(n)`, as we will be only traversing over `time` which is `2 * n`.
+---
 
 ## Math & Geometry
 
