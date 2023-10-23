@@ -2629,7 +2629,131 @@ def lengthOfLIS(self, nums: List[int]) -> int:
 
 ## 2-D Dynamic Programming
 
+### [62. Unique Paths](https://leetcode.com/problems/unique-paths/description/)
+
+There is a robot on an `m x n` grid. The robot is initially located at the top-left corner (i.e., `grid[0][0]`). The robot tries to move to the bottom-right corner (i.e., `grid[m - 1][n - 1]`). The robot *can only move either down or right* at any point in time.
+
+Given the two integers `m` and `n`, return the number of possible unique paths that the robot can take to reach the bottom-right corner.
+
+The test cases are generated so that the answer will be less than or equal to `2 * 10`<sup>`9`</sup>
+
+#### Solution:
+
+- To solve this we create a dp to maintain how many ways we can visit block at `i,j` if we move only right and down.
+- Loop through the matrix starting from the second row and second column. We start from the second row and column because the first row and first column are already initialized with 1s. These represent the base cases where there's only one way to reach any position in the first row or first column: by moving right or down, respectively.
+- The value at any position `(i, j)` in the matrix is the sum of the value above it `(i-1, j)` and the value to its left `(i, j-1)`.
+
+```python
+def uniquePaths(self, m: int, n: int) -> int:
+    dp = [[1]*n for i in range(m)]
+
+    for i in range(1, m):
+        for j in range(1, n):
+            # Any path to (i, j) must either come from above or from the left.
+            dp[i][j] = dp[i-1][j] + dp[i][j-1]
+        
+    return dp[-1][-1]
+```
+- Time complexity, `O(m x n)`
+---
+
+### [1143. Longest Common Subsequence](https://leetcode.com/problems/longest-common-subsequence/description/)
+
+Given two strings `text1` and `text2`, return the *length of their longest common subsequence*. If there is no common subsequence, return `0`.
+
+A subsequence of a string is a new string generated from the original string with some characters (can be none) deleted without changing the relative order of the remaining characters.
+
+For example, "ace" is a subsequence of "abcde".
+
+A common subsequence of two strings is a subsequence that is common to both strings.
+
+#### Solution:
+
+- We, Create a 2D list `dp` of size `(len(text1) + 1) x (len(text2) + 1)` filled with `0`s. 
+- `dp[i][j]` represents the length of LCS of the first `'i'` characters of `text1` and the first `'j'` characters of `text2`.
+- Example: `text1 = "ace"` and `text2 = "xabcde"` , dp array will be,\
+<img src="https://assets.leetcode.com/users/votrubac/image_1564691262.png"  width="250">
+
+```python
+def longestCommonSubsequence(self, text1: str, text2: str) -> int:
+    dp = [[0 for j in range(len(text2) + 1)] for i in range(len(text1) + 1)]
+
+    for i in range(1, len(text1) + 1):
+        for j in range(1, len(text2) + 1):
+
+            # If characters at index 'i-1' of 'text1' and index 'j-1' of 'text2' match,
+            # LCS length at 'dp[i][j]' is 1 + the LCS of previous strings 'dp[i-1][j-1]'.
+            if text1[i-1] == text2[j-1]:
+                dp[i][j] = 1 + dp[i-1][j-1]
+            else:
+                # If they don't match, the LCS length at 'dp[i][j]' is the max between 
+                # the LCS length of 'text1' up to 'i' and 'text2' up to 'j-1', and 
+                # the LCS length of 'text1' up to 'i-1' and 'text2' up to 'j'.
+                dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+
+    # Return the value at the bottom-right corner of the 'dp' matrix.
+    return dp[len(text1)][len(text2)]
+```
+- Time complexity, `O(m x n)` where `m` and `n` are length of `text1` and `text2`.
+---
+
 ## Greedy
+
+### [53. Maximum Subarray](https://leetcode.com/problems/maximum-subarray/description/)
+
+Given an integer array `nums`, **find the subarray with the largest sum**, and return its sum.
+
+#### Solution:
+
+- In this we do an implementation of **Kadane's algorithm** to find the maximum contiguous subarray sum. (Greedy Alogirith).
+- In this we keep on adding elements to `total` and record it in `res` if its greater than `res`. If `total` goes less than zero we set the sum to zero.
+
+```python
+def maxSubArray(self, nums: List[int]) -> int:
+    res = nums[0]
+
+    total = 0
+    for n in nums:
+        total += n              # Add the current number to 'total'
+        res = max(res, total)   # if the current running sum is the highest sum yet
+
+        # If 'total' becomes negative, reset 'total' to 0.
+        if total < 0:
+            total = 0
+
+    return res
+```
+- Time complexity, `O(n)`
+---
+
+### [55. Jump Game](https://leetcode.com/problems/jump-game/description/)
+
+You are given an integer array `nums`. You are initially positioned at the array's **first index**, and each element in the array represents your maximum jump length at that position.
+
+Return `true` if you can reach the last index, or `false` otherwise.
+
+#### Solution:
+
+- Idea is to work backwards from the last index. Keep track of the smallest index that can "jump" to the last index. Check whether the current index can jump to this smallest index.
+- Everytime we can reach the `goal` from index `i`, index `i` becomes the new goal.
+- After processing all elements, if the 'goal' is now the 0th index, it means we can successfully jump from the start to the end.
+
+```python
+def canJump(self, nums: List[int]) -> bool:
+    goal = len(nums) - 1
+
+    # Starting from the second to last element and working backwards.
+    for i in range(len(nums) - 2, -1, -1):
+
+        # Check if the current position 'i' can jump to or beyond the 'goal'.
+        if i + nums[i] >= goal:
+            # If we can then the new 'goal' becomes 'i'.
+            goal = i
+
+    return goal == 0
+```
+- Time complexity, `O(n)`
+---
 
 ## Intervals
 
