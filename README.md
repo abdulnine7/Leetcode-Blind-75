@@ -3056,14 +3056,166 @@ def setZeroes(self, matrix: List[List[int]]) -> None:
 
 ## Bit Manipulation
 
-### []()
+### [191. Number of 1 Bits](https://leetcode.com/problems/number-of-1-bits/description/) <sup style="color:#2DB55D">Easy</sup>
+
+Write a function that takes the binary representation of an unsigned integer and returns the number of '1' bits it has (also known as the Hamming weight).
 
 #### Solution:
 
--
+- To solve this, we flip the rightmost '1' bit until there are no '1' bits left in the number.
+- The expression `(n-1)` flips all the bits after the rightmost set bit in `n`.
+- Performing a bitwise AND between `n` and `(n-1)` will unset (turn to 0) the rightmost set bit in `n`.
+
+- Consider the number `n = 13`, which in binary is `1101`.
+    - **First Iteration**: `n - 1` in binary = `1100`\
+    `n & (n-1)` results in 1100\
+    `n` (updated) = 1100
+
+    - **Second Iteration**: `n - 1` in binary = `1011`\
+    `n & (n-1)` results in `1000`\
+    `n` (updated) = `1000`
+
+    - **Third Iteration**: `n - 1` in binary = `0111`\
+    `n & (n-1)` results in `0000`\
+    `n` (updated) = `0000`
+
+    - At this point, since `n` has become `0`, the loop terminates.
 
 ```python
+def hammingWeight(self, n: int) -> int:
+    count = 0
+    
+    # Continue until all '1' bits in n are exhausted (i.e., n becomes 0)
+    while n:
+        n &= n - 1
+        count += 1
+
+    return count
+```
+```python
+# Another solution
+def hammingWeight(self, n: int) -> int:
+    return bin(n).count('1')
+```
+- Time complexity, `O(k)` where `k` is the number of set bits `'1'`.
+---
+
+### [338. Counting Bits](https://leetcode.com/problems/counting-bits/description/) <sup style="color:#2DB55D">Easy</sup>
+
+Given an integer `n`, return an array `ans` of length `n + 1` such that for each `i` (`0 <= i <= n`), `ans[i]` is the number of `1`'s in the binary representation of `i`.
+
+#### Solution:
+
+- If we look at a large input, `n=14` we can see there is a pattern, 
+    - Index : `0 1 2 3 | 4 5 6 7 | 8 9 10 11 | 12 13 14 15`
+    - num : `0 1 1 2 | 1 2 2 3 | 1 2 2 3 | 2 3 3 4`
+
+
+- So, we initialize a dynamic programming table with size `n+1` filled with zeros, `dp[i]` will store the number of set bits in the number `i`.
+
+- Also we Initialize `offset`, which will help identify patterns in binary representation.
+
+- For every `i` we check if `i` is equal to twice `offset`, if yes then we set `offset` as `i`
+
+- And we calculate dp as `dp[i] = 1 + dp[i - offset]`.
+
+```python
+def countBits(self, n: int) -> List[int]:
+    dp = [0] * (n + 1)
+    offset = 1
+
+    for i in range(1, n + 1):
+        
+        # Check if the current number is double the current offset.
+        # i.e Offset will change at 2,4,8,16,32,64...
+        if offset * 2 == i:
+            offset *= 2
+        
+        # Calculate the number of `1` bits for the current number.
+        # It's 1 plus the number of `1` bits in the number "i - offset".
+        dp[i] = 1 + dp[i - offset]
+    return dp
+```
+- Time complexity, `O(n)`
+---
+
+### [190. Reverse Bits](https://leetcode.com/problems/reverse-bits/description/) <sup style="color:#2DB55D">Easy</sup>
+
+Reverse bits of a given 32 bits unsigned integer.
+
+Example: 13 in integer , ie `0000 0000 0000 0000 0000 0000 0000 1101` will become, `1011 0000 0000 0000 0000 0000 0000 0000` which will be `2952790016` in integer.
+
+
+#### Solution:
+
+```python
+def reverseBits(self, n: int) -> int:
+    result = 0
+    for _ in range(32):
+        # Shift result to the left by 1 (making space for the next bit)
+        result <<= 1
+        # If the last bit of n is set, update the last bit of result
+        result |= n & 1
+        # Move to the next bit of n
+        n >>= 1
+    return result
+```
+- Time complexity, `O(1)`
+---
+
+### [268. Missing Number](https://leetcode.com/problems/missing-number/description/) <sup style="color:#2DB55D">Easy</sup>
+
+Given an array `nums` containing `n` distinct numbers in the range `[0, n]`, return t*he only number in the range that is missing from the array*.
+
+
+#### Solution:
+
+- One way to approach this is by using the fact that the sum of the first n natural numbers is `(n * (n + 1)) / 2`. If you compute the sum of the numbers given in the array and subtract it from the sum of the first `n` natural numbers, you get the missing number.
+
+```python
+def missingNumber(self, nums: List[int]) -> int:
+    expected_total = len(nums) * (len(nums) + 1) // 2
+    return expected_total - sum(nums)
+```
+- Time complexity, `O(n)` to sum all the `nums`.
+---
+
+### [371. Sum of Two Integers](https://leetcode.com/problems/sum-of-two-integers/description/) <sup style="color:#FFB801">Medium</sup>
+
+Given two integers `a` and `b`, return *the sum of the two integers* without using the operators `+` and `-`.
+
+#### Solution:
+
+- To solve this problem without using the + or - operators, we can use bit manipulation techniques.
+    - Use the XOR ^ operator to add the two numbers without carrying.
+    - Use the AND & operator and left shift << to find the carry.
+    - Iterate until there is no carry.
+- The result will be the number that was obtained without carrying.
+
+```python
+def getSum(a: int, b: int) -> int:
+    # 32 bits integer max
+    MAX = 0x7FFFFFFF
+    
+    # mask to get last 32 bits
+    mask = 0xFFFFFFFF
+    
+    # Ensure that both a and b are positive
+    while b != 0:
+        # ^ gets the sum, & gets the carry
+        # << shifts carry to the left so adding it to a gives the required sum
+        a = (a ^ b) & mask
+        b = ((a & b) << 1) & mask
+
+    # check if the 32nd bit is 1 or 0
+    # if 1, it means it's a negative number
+    return a if a <= MAX else ~(a ^ mask)
 
 ```
-- Time complexity, `O()`
+- The worst-case time complexity of `O(32)`, or more simply, `O(1)`. Regardless of the actual values of `a`and `b`, the maximum number of iterations we would do (in the context of 32-bit integers) is fixed at 32.
+
+---
+
+Abdul Noushad Sheikh
+
 ---
