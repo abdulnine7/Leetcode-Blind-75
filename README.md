@@ -2928,6 +2928,132 @@ def minMeetingRooms(self, intervals: List[List[int]]) -> int:
 
 ## Math & Geometry
 
+### [48. Rotate Image](https://leetcode.com/problems/rotate-image/description/) <sup style="color:#FFB801">Medium</sup>
+
+You are given an `n x n` 2D matrix representing an image, rotate the image by **90 degrees** (clockwise).
+
+You have to **rotate the image in-place**, which means you have to modify the input 2D matrix directly. DO NOT allocate another 2D matrix and do the rotation.
+
+#### Solution:
+
+- There are `n//2` layers for matrix of `nxn`. We iterate over for each layer.
+- Inside each layer we iterate for that layer from `i` to `n-i-1`.
+- That means for top layer `0` we will iterate to flip elements from `0 to n-1`, and so on.
+
+```python
+def rotate(self, m: List[List[int]]) -> None:
+    n = len(m)
+    
+    # Iterating over each layer, starting from the outermost layer
+    for i in range(0, n//2):
+        
+        # Iterate over elements within the current layer except last element.
+        for j in range(i, n-i-1):
+            
+            # Save the top-left corner
+            temp = m[i][j]
+            
+            # Move the bottom-left corner to the top-left
+            m[i][j] = m[n - 1 - j][i]
+            
+            # Move the bottom-right corner to the bottom-left
+            m[n - 1 - j][i] = m[n - 1 - i][n - 1 - j]
+            
+            # Move the top-right corner to the bottom-right
+            m[n - 1 - i][n - 1 - j] = m[j][n - 1 - i]
+            
+            # Place the saved top-left corner to the top-right
+            m[j][n - 1 - i] = temp
+```
+- Time complexity, `O(n x n)`
+---
+
+### [54. Spiral Matrix](https://leetcode.com/problems/spiral-matrix/description/) <sup style="color:#FFB801">Medium</sup>
+
+Given an `m x n` matrix, return all elements of the `matrix` *in spiral order*.
+
+#### Solution:
+
+- In this we maintain variables, `left`, `right`, `top` and `bottom`. We use four for loops to go,
+    - Left to Right
+    - Top to Bottm
+    - Right to Left
+    - Bottom to Top
+
+```python
+def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
+    res = []
+    left, right = 0, len(matrix[0])
+    top, bottom = 0, len(matrix)
+
+    while left < right and top < bottom:
+
+        # get every i in the top row
+        for i in range(left, right):
+            res.append(matrix[top][i])
+        top += 1
+
+        # get every i in the right col
+        for i in range(top, bottom):
+            res.append(matrix[i][right - 1])
+        right -= 1
+
+        # Before moving on, we check whether we still have rows/columns left to traverse.
+        # Important for cases like 2x3 matrix where after the above for-loops, we're done.
+        if not (left < right and top < bottom):
+            break
+
+        # get every i in the bottom row
+        for i in range(right - 1, left - 1, -1):
+            res.append(matrix[bottom - 1][i])
+        bottom -= 1
+
+        # get every i in the left col
+        for i in range(bottom - 1, top - 1, -1):
+            res.append(matrix[i][left])
+        left += 1
+
+    return res
+```
+- Time complexity, `O(m x n)`
+---
+
+### [73. Set Matrix Zeroes](https://leetcode.com/problems/set-matrix-zeroes/description/) <sup style="color:#FFB801">Medium</sup>
+
+Given an` m x n` integer matrix `matrix`, if an element is `0`, set its entire row and column to `0`'s.
+
+You must do it in place.
+
+#### Solution:
+
+- In this we find out which rows and columns need to be zeroed and add then to the respective set. Then we zero them out.
+
+```python
+def setZeroes(self, matrix: List[List[int]]) -> None:
+    # Rows and columns that should be set to zero
+    rows_zeros = set()
+    cols_zeros = set()
+
+    # Identify which rows and columns need to be set to zero
+    for row in range(len(matrix)):
+        for col in range(len(matrix[0])):
+            if matrix[row][col] == 0:
+                rows_zeros.add(row)
+                cols_zeros.add(col)
+
+    # Set all entries in identified rows to zero
+    for row in rows_zeros:
+        for col in range(len(matrix[0])):
+            matrix[row][col] = 0
+
+    # Set all entries in identified columns to zero
+    for col in cols_zeros:
+        for row in range(len(matrix)):
+            matrix[row][col] = 0
+```
+- Time complexity, `O(m x n)`
+---
+
 ## Bit Manipulation
 
 ### []()
