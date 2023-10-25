@@ -69,7 +69,7 @@ def twoSum(self, nums: List[int], target: int) -> List[int]:
 ___
 
 ### [49. Group Anagrams](https://leetcode.com/problems/group-anagrams/) <sup style="color:#FFB801">Medium</sup>
-Given an array of strings strs, group the anagrams together. You can return the answer in any order.
+Given an array of strings `strs`, group the anagrams together. You can return the answer in any order.
 
 An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
 
@@ -167,7 +167,7 @@ One possible encode method is: "lint#code#love#you"
 ```
 
 ####  Solution: 
-- Very easy need no explaination. Bye.
+- Very easy need no explanation. Bye.
 
 ```python
 class Solution:
@@ -189,7 +189,7 @@ You must write an algorithm that runs in `O(n)` time.
 - In this we have to count the length of longest consecutive sequence. in `O(n)` time.
 - This can be easily done by sorting the array and counting but it will take `O(nlogn)` time.
 - In this solution, we convert the `nums` in `hashset` and try to find the start of any sequence.
-- If `nums[i]-1` does not exist in `hashset` that means `nums[i]` is an start of sqeuence.
+- If `nums[i]-1` does not exist in `hashset` that means `nums[i]` is an start of sequence.
 - Once we find a start we check how many elements are there in that particular sequence, and count the length.
 ```python
 def longestConsecutive(self, nums: List[int]) -> int:
@@ -260,11 +260,11 @@ Notice that the solution set must not contain duplicate triplets.
 - As array has both `-ve` and `+ve` numbers, firstly we sort the array. 
 - If array size <3 means no triplets. If sorted array 1<sup>st</sup> element is +ve means no sum of 3 numbers = 0.
 - The basic thinking logic for this is: **Fix any one number in sorted array and find the other two numbers after it**. The other two numbers can be easily found using two pointers (as array is sorted) and two numbers should have sum = -1*(fixed number).
-- Search between two pointers, just similiar to binary search. `threeSum = num[i] + num[left] + num[right]`.
-    - If `threeSum` is -ve, means, we need more +ve numbers to make it 0, increament low (left++).
-    - If `threeSum` is +ve, means, we need more -ve numbers to make it 0, decreament high (right--).
+- Search between two pointers, just similar to binary search. `threeSum = num[i] + num[left] + num[right]`.
+    - If `threeSum` is -ve, means, we need more +ve numbers to make it 0, increment low (left++).
+    - If `threeSum` is +ve, means, we need more -ve numbers to make it 0, decrement high (right--).
     - If `threeSum` is 0, that means we have found the required triplet, push it in result array.
-- Now again, to avoid duplicate triplets, we have to navigate to last occurences of `num[left]` and `num[right]` respectively.
+- Now again, to avoid duplicate triplets, we have to navigate to last occurrences of `num[left]` and `num[right]` respectively.
 
 ```python
 def threeSum(self, nums: List[int]) -> List[List[int]]:
@@ -324,7 +324,7 @@ Return the *maximum amount* of water a container can store.
 <img src="https://s3-lc-upload.s3.amazonaws.com/uploads/2018/07/17/question_11.jpg"  width="500">
 
 #### Solution:
-- First we set left and right pointer at the extream ends. 
+- First we set left and right pointer at the extreme ends. 
 - And we measure water level with minimum of two heights, `height[left]` and `height[right]` with width, `right-left`
 - In order to have more height of the container we move left or right pointer. Whichever is shorter in height we change that pointer to next.
 
@@ -437,7 +437,7 @@ Explanation: Replace the two 'A's with two 'B's or vice versa.
 
 - In this again we use 2 pointers and a *frequency dictionary* (`count`) to keep count of characters in current window.
 - We track the window with `left` and `right` pointers, and we also keep record `maxf` ie *maximum frequency of any character in the current window*.
-- In each iteration the size of window is increased as `right` is increased, But if voilation happend in that iteration `left` is increased so size is reduced by 1 and window size remain same.
+- In each iteration the size of window is increased as `right` is increased, But if violation happened in that iteration `left` is increased so size is reduced by 1 and window size remain same.
 - In this we wont update the `maxf` when we reduce the window size, as we are not tracking `maxf` belong to which character's frequency.
 - Hence by the end we will have window of maximum length that can be made by ignoring `k` characters.
 ```python
@@ -452,7 +452,7 @@ def characterReplacement(self, s: str, k: int) -> int:
         count[s[right]] = 1 + count.get(s[right], 0)
         maxf = max(maxf, count[s[right]])
 
-        # If voilation detected, ie. the length of the current window minus the maximum 
+        # If violation detected, ie. the length of the current window minus the maximum 
         # frequency exceeds 'k', it means we need to shrink the window from the left
         if (right - left + 1) - maxf > k:
             count[s[left]] -= 1 
@@ -467,17 +467,17 @@ def characterReplacement(self, s: str, k: int) -> int:
 Given two strings `s` and `t` of lengths `m` and `n` respectively, return the **minimum window
 substring** of `s` such that every character in `t` (**including duplicates**) is included in the window. If there is no such substring, `return` the empty string `""`.
 
-The testcases will be generated such that the answer is **unique**.
+The test cases will be generated such that the answer is **unique**.
 
 #### Solution:
 
 - In this we maintain 2 dictionaries, 2 variables `have` and `need`
-    - `countT` to keep frequency count of chatacters of `t`
-    - `window` to keep frequenc count of characters of current window
+    - `countT` to keep frequency count of characters of `t`
+    - `window` to keep frequency count of characters of current window
     - `have` is count of characters that is there in window that are in `t`
     - `need` need is required number of characters we need in the window that are in `t`
 - We also maintain `res` for result string (start, end) and `resLen` for length of result string
-- Rest of the explaination in comments:
+- Rest of the explanation in comments:
 
 ```python
 def minWindow(self, s: str, t: str) -> str:
@@ -490,7 +490,7 @@ def minWindow(self, s: str, t: str) -> str:
     for c in t:
         countT[c] = 1 + countT.get(c, 0)
 
-    # Iniitialize variables needed
+    # Initialize variables needed
     have, need = 0, len(countT)
     res, resLen = [-1, -1], float("infinity")
     left = 0
@@ -682,7 +682,7 @@ Given the `head` of a singly linked list, reverse the list, and return the *reve
 #### Solution:
 
 - In this we use the `curr` node as pointer to iterate over the linked list.
-- In each iteration we, put the current node behind previous node untill there are no current nodes. In these following steps, 
+- In each iteration we, put the current node behind previous node until there are no current nodes. In these following steps, 
     - We record the node next to current node and keep it in `temp`.
     - Then we set the next of current to the previous recorded node.
     - And mark the current node previous for next iteration.
@@ -782,11 +782,11 @@ def reorderList(self, head: ListNode) -> None:
         second.next = prev
         prev = second
         second = tmp
-    seecond = prev
+    second = prev
 
 
-    # merge two halfs first and second
-    # we will have more eleeent in first in case of odd number of elements
+    # merge two half first and second
+    # we will have more element in first in case of odd number of elements
     while second:
         tmp1, tmp2 = first.next, second.next
         first.next = second
@@ -804,7 +804,7 @@ Given the `head` of a *linked list*, remove the **k<sup>th</sup>** node from the
 
 - Let's say the *n = length of linked list*.
 - In this we use two different pointers to head (`fast` and `slow`) node then,and we traverse `k` steps with `fast`.
-- Now once `fast` is `k` steps ahead, we traverse both `slow` and `fast` untill fast reaches end node of linked list. That means fast is on last node, `n-1` .
+- Now once `fast` is `k` steps ahead, we traverse both `slow` and `fast` until fast reaches end node of linked list. That means fast is on last node, `n-1` .
 - Hence fast has traversed, `n-1` and slow has traversed, `n-1-k`.
 - This means that, `slow` is 1 step away from k<sup>th</sup> node from the end.
 - So we do `slow.next = slow.next.next` to delete the k<sup>th</sup> node from the end.
@@ -872,7 +872,7 @@ You are given an array of `k` linked-lists `lists`, each linked-list is sorted i
 #### Solution:
 
 - In this we merge consecutive the lists in `lists` into and create a new `mergedLists` array containing half of the `lists`.
-- Then we set `lists = mergedLists`, and then do the same operation. We repeat untill the size of `lists` is reduced to `1` and all the `lists` are merged.
+- Then we set `lists = mergedLists`, and then do the same operation. We repeat until the size of `lists` is reduced to `1` and all the `lists` are merged.
 - Then we return the final list, `lists[0]` that is remaining in `lists`.
 
 ```python
@@ -921,7 +921,7 @@ Given the `root` of a binary tree, invert the tree, and return its `root`.
 #### Solution:
 
 - In this we have to change tree to its mirror image. That means all the *left nodes will be right* **and** *right nodes will be left*.
-- To do this we call `invertTree` function to interchange `left` and `right` branches and inside the function we make recursive call on `left` and `right` subtree, so that their childrens are interchanged too.
+- To do this we call `invertTree` function to interchange `left` and `right` branches and inside the function we make recursive call on `left` and `right` subtree, so that their children are interchanged too.
 
 ```python
 def invertTree(self, root: Optional[TreeNode]) -> Optional[TreeNode]:
@@ -1050,7 +1050,7 @@ A subtree of a binary tree `tree` is a tree that consists of a node in `tree` an
 
 #### Solution:
 
-- In this we chech if `s` and `t` are same tree using the function `isSameTree(p,q)` that we made in Problem No. 100.
+- In this we check if `s` and `t` are same tree using the function `isSameTree(p,q)` that we made in Problem No. 100.
 - If `s` and `t` are not same we check if `s.left` is same as `t` **or** `s.right` is same as `t`.
 - Like this we recursively check if any branch in the tree `s` is same as tree `t`.
 
@@ -1090,7 +1090,7 @@ According to the definition of LCA on Wikipedia: “The lowest common ancestor i
 
 #### Solution:
 
-- In this we go in a loop untill both `p` and `q` nodes are on opposite side.
+- In this we go in a loop until both `p` and `q` nodes are on opposite side.
 - Once we come across that `p` and `q` are on different side we return that node.
 
 ```python
@@ -1145,7 +1145,7 @@ def levelOrder(self, root: TreeNode) -> List[List[int]]:
             if node.right:
                 q.append(node.right)
 
-        result.append(val) # Apppend array 'val' for each level to result array
+        result.append(val) # Append array 'val' for each level to result array
     return result
 ```
 - Time complexity, `O(n)`
@@ -1317,7 +1317,7 @@ Clarification: The input/output format is the same as how LeetCode serializes a 
 #### Solution:
 
 - In this we do pre-order DFS traverse to the binary tree and create an array and then convert that array to an string to serialize.
-- To Deserialize, we do reverse dfs search where we, conver the string to array and then maintain variable `i` to track the array traversal.
+- To Deserialize, we do reverse dfs search where we, convert the string to array and then maintain variable `i` to track the array traversal.
 - In Deserialize, we recursively calls dfs to construct the left and right subtrees of the current node, and assigns them to the left and right attributes of the current node.
 
 ```python
@@ -1377,7 +1377,7 @@ Implement the Trie class:
 
 #### Solution:
 
-- Explaination is in code comments.
+- Explanation is in code comments.
 
 ```python
 # Create a class for each character as Node and its followup character its children
@@ -1539,7 +1539,7 @@ class WordDictionary:
             for i in range(j, len(word)):
                 c = word[i]
 
-                # if c is wild card character do dfs search over all current childrens
+                # if c is wild card character do dfs search over all current children
                 # to find: if remaining part of word is present.
                 if c == ".":
 
@@ -1576,7 +1576,7 @@ Each word must be constructed from letters of sequentially adjacent cells, where
 
 #### Solution:
 
-- In this of we look close, we can do **Brutforce** way to solve this, where we do DFS to check each `word` in `words` starting at every *index* `i,j` in the `board`. In this Brutforce solution, hence run time will be `O(m×n)×Time_to_DFS` => means, `(m×n×k)` where `k` i average length of `word` in `words`, `k` can range from `1 to m×n`.
+- In this of we look close, we can do **Bruteforce** way to solve this, where we do DFS to check each `word` in `words` starting at every *index* `i,j` in the `board`. In this Bruteforce solution, hence run time will be `O(m×n)×Time_to_DFS` => means, `(m×n×k)` where `k` i average length of `word` in `words`, `k` can range from `1 to m×n`.
 - To save Time we use **Trie** to do this in optimal manner.
 - We add all the `word` in `words` array to a **Trie** data structure.
 - Then we Iterate over all the places `board[i][j]` of the board. And we do DFS search at each index.
@@ -1588,7 +1588,7 @@ Each word must be constructed from letters of sequentially adjacent cells, where
 class TrieNode:
     def __init__(self):
         self.children = {} # Dictionary for next character nodes. 
-        self.isWord = False # To keep trach of end of word node.
+        self.isWord = False # To keep track of end of word node.
         self.refs = 0 # Reference to track count of times a character node is referred.
 
     # Just like regular add words to Trie
@@ -1759,7 +1759,7 @@ The test cases are generated such that the number of *unique combinations* that 
 
 #### Solution:
 
-- In this we do backtracking usng DFS search, here we maintain a combination `curr` until get get `total` equal to `target`. If we found such combination we add it to result `res`.
+- In this we do backtracking using DFS search, here we maintain a combination `curr` until get get `total` equal to `target`. If we found such combination we add it to result `res`.
 
 ```python
 def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
@@ -1810,7 +1810,7 @@ The word can be constructed from letters of sequentially adjacent cells, where a
 
 ```python
 def exist(self, board: List[List[str]], word: str) -> bool:
-    ROWS, COLS = len(board), len(board[0]) # Get the imensions
+    ROWS, COLS = len(board), len(board[0]) # Get the dimensions
     path = set() # To track the visited locations
 ```
 ```python
@@ -1874,8 +1874,8 @@ An island is surrounded by water and is formed by connecting adjacent lands hori
 #### Solution:
 
 - In this at each location of grid `i,j` if it is a land i.e `'1'` we change it and all its adjacent land to `'0'` and increase the count of islands by 1. 
-- Then we iterate forward and we if find any land again we repeat the process. Untill we changed all `'1'` to `'0'`.
-- Thus we will get number of inslands count in the variable `islands`.
+- Then we iterate forward and we if find any land again we repeat the process. Until we changed all `'1'` to `'0'`.
+- Thus we will get number of islands count in the variable `islands`.
 
 ```python
 def numIslands(self, grid: List[List[str]]) -> int:
@@ -1936,7 +1936,7 @@ The given node will always be the first node with `val = 1`. You must return the
 #### Solution:
 
 - In this we use, Depth First Search function to traverse and clone each node.
-- We also maintain the dictionary of cloned nodes `oldToNew`, so that if we come across already cloned node we dont clone them again.
+- We also maintain the dictionary of cloned nodes `oldToNew`, so that if we come across already cloned node we don't clone them again.
 
 ```python
 def cloneGraph(self, node: "Node") -> "Node":
@@ -2262,7 +2262,7 @@ Each time you can either climb `1` or `2` steps. In how many distinct ways can y
 - At every step `n` we are either coming from (n-1)<sup>th</sup> or (n-2)<sup>th</sup> step. Hence,
 - Number of ways to climb `n` steps is equal to, sum of number of ways to climb `n-1` steps and `n-2` steps. i.e, `climb(n) = climb(n-1) + climb(n-2)`
 ```python
-# Botton Up approach non recursive:
+# Bottom Up approach non recursive:
 def climbStairs(self, n: int) -> int:
     if n <= 3:
         return n
@@ -2406,7 +2406,7 @@ A string is a palindrome when it reads the same backward as forward.
 
 #### Solution:
 
-- We iterate over each character of the string, and cound all the palindrome that are starting at that character location.
+- We iterate over each character of the string, and could all the palindrome that are starting at that character location.
 
 ```python
 def countSubstrings(self, s: str) -> int:
@@ -2424,7 +2424,7 @@ def countPali(self, s, l, r):
     res = 0  
 
     while l >= 0 and r < len(s) and s[l] == s[r]:
-         # Everytime we find a matching character while expanding we,
+         # Every time we find a matching character while expanding we,
          # Increment the count of palindromic substrings for this center.
         res += 1 
         
@@ -2705,7 +2705,7 @@ Given an integer array `nums`, **find the subarray with the largest sum**, and r
 
 #### Solution:
 
-- In this we do an implementation of **Kadane's algorithm** to find the maximum contiguous subarray sum. (Greedy Alogirith).
+- In this we do an implementation of **Kadane's algorithm** to find the maximum contiguous subarray sum. (Greedy Algorithm).
 - In this we keep on adding elements to `total` and record it in `res` if its greater than `res`. If `total` goes less than zero we set the sum to zero.
 
 ```python
@@ -2862,7 +2862,7 @@ def eraseOverlapIntervals(self, intervals: List[List[int]]) -> int:
 
 Given an array of meeting time intervals consisting of start and end times `[[s1,e1],[s2,e2],...] (si < ei)`, determine if a person could attend all meetings.
 
-The imtervals are of form, class objects of the below class,
+The intervals are of form, class objects of the below class,
 ```python
 class Interval(object):
     def __init__(self, start, end):
@@ -2873,7 +2873,7 @@ class Interval(object):
 
 #### Solution:
 
-- This is also like above 2 problems, here if we come acorss any overlappinng intervals we return `False`.
+- This is also like above 2 problems, here if we come across any overlapping intervals we return `False`.
 - Since we have intervals as object of class, we sort the array first by `start` and then by `end` using `lambda` function like below.
 
 ```python
@@ -2897,7 +2897,7 @@ Given an array of meeting time intervals consisting of start and end times `[[s1
 
 #### Solution:
 
-- In thhi we add start a end to one single time stream and sort it to track starting and ending of meetings.
+- In this we add start a end to one single time stream and sort it to track starting and ending of meetings.
 - For example, if we have `intervals = [(0,30),(5,10),(15,20)]`
     - After `time.sort(...)` we will have,
     - `time = [(0, 1), (5, 1), (10, -1), (15, 1), (20, -1), (30, -1)]`
@@ -2976,7 +2976,7 @@ Given an `m x n` matrix, return all elements of the `matrix` *in spiral order*.
 
 - In this we maintain variables, `left`, `right`, `top` and `bottom`. We use four for loops to go,
     - Left to Right
-    - Top to Bottm
+    - Top to Bottom
     - Right to Left
     - Bottom to Top
 
@@ -3216,6 +3216,6 @@ def getSum(a: int, b: int) -> int:
 
 ---
 
-Abdul Noushad Sheikh
+`Copyright ⓒ 2023 Abdul Noushad Sheikh | MIT LICENSE`
 
 ---
